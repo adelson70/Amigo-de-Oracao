@@ -1,3 +1,4 @@
+const { BucketService } = require('../services/BucketService')
 const { adicionarNome, buscarNome, alterarNome, deletarNome } = require('../services/ExampleService')
 
 const ExampleController = {
@@ -38,6 +39,11 @@ const ExampleController = {
     if (!deletado) return res.status(404).json({ error: 'Nome não encontrado' })
 
     res.status(204).send()
+  },
+
+  example: async (req, res) => {
+    const data = await BucketService.getBuckets('arquivo.json')
+    return res.status(200).json(data)
   }
 }
 

@@ -1,19 +1,26 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useApi } from '../context/ApiContext';
 import ExampleComponent from '../components/ExampleComponent';
+import api from '../services/api';
 
 const HomePage = () => {
-  const { data, fetchData } = useApi();
+  const [data, setData] = useState()
 
   useEffect(() => {
-    fetchData('/example');
-  }, [fetchData]);
+    const fetchData = async () => {
+      const response = await api.get('/example')
+      setData(response.data.nome)
+    }
+    fetchData()
+  }, []);
 
   return (
     <div>
       <h1>Home Page</h1>
       <ExampleComponent />
-      {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
+      {data && 
+        <p>Nome: {data}</p>
+      }
     </div>
   );
 };
