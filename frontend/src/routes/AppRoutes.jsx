@@ -3,11 +3,13 @@ import { Routes, Route } from 'react-router-dom';
 import HomePage from '../pages/HomePage';
 import AboutPage from '../pages/AboutPage';
 import NotFound from '../pages/NotFound/index';
+import RoomLimit from '../pages/RoomLimit/index';
 
 const AppRoutes = () => (
   <Routes>
     <Route path="/" element={<HomePage />} />
     <Route path="/about" element={<AboutPage />} />
+    <Route path="/room-limit/:room" element={<RoomLimit />} />
     <Route path="*" element={<NotFound />} />
   </Routes>
 );
