@@ -8,7 +8,7 @@ import './styles.css';
 const RoomLimit = () => {
     const { room } = useParams();
     const navigate = useNavigate();
-    const handleClick = () => navigate('/');
+    const handleClick = () => navigate('/room/lobby');
 
     return (
         <div className='container'>
