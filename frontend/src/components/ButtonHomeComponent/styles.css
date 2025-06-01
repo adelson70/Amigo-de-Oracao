@@ -1,0 +1,17 @@
+.button-home-component{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-color: #003366;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-weight: 700;
+}
+
+.button-home-component:hover {
+    background-color: #00509e;
+    cursor: pointer;
+}
