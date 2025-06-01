@@ -1,4 +1,3 @@
-
 const { Sequelize } = require('sequelize');
 
 // Configuração do banco de dados SQLite

@@ -1,35 +1,36 @@
-const sequelize = require('../config/database');
+const { database } = require('../config/pg');
 
 // Importar os modelos
-const Nome = require('./Nome');
+const Usuario = require('./Usuario');
+const Sala = require('./Sala');
+const Sorteio = require('./Sorteio');
+const Participante = require('./Participante');
 
-async function sync() {
-    try {
-        // Testar a conexão com o DATABASE
-        await sequelize.authenticate()
-            .then(() => {
-                console.log('DATABASE: CONECTADO');
-            }
-            )
-            .catch((error) => {
-                console.error('DATABASE: DESCONETADO', error);
-            });
-        
-            // Sincronizar os modelos com o DATABASE
-        await sequelize.sync({ force: false })
-            .then(() => {
-                console.log('DATABASE: MODELOS SINCRONIZADOS');
-            })
-            .catch((error) => {
-                console.error('DATABASE: MODELOS NÃO SINCRONIZADOS', error);
-            });
-
-    } catch (error) {
-        console.error('DATABASE: ERRO', error);
-    }
-}
-
-module.exports = {
-    sync
+// Objeto que contém todos os modelos
+const models = {
+    Usuario,
+    Sala,
+    Sorteio,
+    Participante
 };
 
+// Aplicar associações se existirem
+Object.values(models)
+    .filter(model => typeof model.associate === 'function')
+    .forEach(model => {
+        model.associate(models);
+    });
+
+// Sincronizar o banco
+database.sync({ alter: true })
+    .then(() => {
+        console.log('BANCO DE DADOS: TABELAS SINCRONIZADAS COM SUCESSO');
+    })
+    .catch((error) => {
+        console.error('BANCO DE DADOS: ERRO AO SINCRONIZAR AS TABELAS', error);
+    });
+
+// Exportar os modelos e a conexão
+module.exports = {
+    ...models,
+};
