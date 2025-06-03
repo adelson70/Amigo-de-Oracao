@@ -1,14 +1,22 @@
-import React from 'react';
+import React, {use, useEffect} from 'react';
 import './styles.css';
 import ButtonHomeComponent from '../../components/ButtonHomeComponent/index';
 import { useNavigate } from 'react-router-dom';
+import { useSocket } from '../../context/SocketContext';
 
 const HomePage = () => {
+  const socket = useSocket();
   const navigate = useNavigate();
 
   const handleClickButton = (action) => {
     switch(action) {
       case 'ENTER':
+        
+      socket.emit('mensagem', { mensagem: 'ping' });
+      socket.on('resposta', (data) => {
+        console.log('Resposta do servidor:', data.message);
+      });
+
         navigate('/room/lobby');
         break;
       case 'CREATE':
