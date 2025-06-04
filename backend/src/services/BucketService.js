@@ -1,5 +1,6 @@
 const axios = require('axios');
 require('dotenv').config();
+const fs = require('fs');
 
 const request_bucket = axios.create({
     baseURL: process.env.BUCKET_API_URL ,
@@ -10,9 +11,9 @@ const request_bucket = axios.create({
 });
 
 const BucketService = {
-    async getBuckets(arquivo) {
+    async get(arquivo) {
         try {
-            const response = await request_bucket.get(`/${arquivo}`);
+            const response = await request_bucket.get(`/upload/${arquivo}`);
             return response.data;
         } catch (error) {
             console.error('Error fetching buckets:', error);
@@ -20,22 +21,48 @@ const BucketService = {
         }
     },
 
-    async createBucket(bucketData) {
+    async post (localFilePath, remoteFileName) {
         try {
-            const response = await request_bucket.post('/buckets', bucketData);
-            return response.data;
+            const fileStream = fs.createReadStream(localFilePath);
+
+            const response = await request_bucket.put(
+            `/upload/${remoteFileName}`,
+            fileStream,
+            {
+                headers: {
+                'Content-Type': 'application/octet-stream',
+                },
+            }
+            );
+            return response.status
         } catch (error) {
-            console.error('Error creating bucket:', error);
+            console.error('Error uploading to bucket:', error.message);
             throw error;
         }
     },
 
-    async deleteBucket(bucketId) {
+    async delete(bucketId) {
         try {
             const response = await request_bucket.delete(`/buckets/${bucketId}`);
             return response.data;
         } catch (error) {
             console.error('Error deleting bucket:', error);
+            throw error;
+        }
+    },
+
+    async status() {
+        try {
+            const response = await request_bucket.get('/status');
+
+            if (response.status !== 200) {
+                throw new Error('BUCKET NÃO ESTÁ SINCRONIZADO');
+            }
+
+            console.log('BUCKET: CONECTADO COM SUCESSO');
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching bucket status:', error);
             throw error;
         }
     }
