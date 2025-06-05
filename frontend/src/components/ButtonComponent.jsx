@@ -10,6 +10,9 @@ const ButtonComponent = ({ background = '#007bff', description = 'Click Me', cli
             borderRadius: '5px',
             cursor: 'pointer',
             fontWeight: 'bold',
+            hover: {
+                backgroundColor: '#0056b3',
+            },
         }}
         className="btn btn-primary"
         onClick={clickHandler}
