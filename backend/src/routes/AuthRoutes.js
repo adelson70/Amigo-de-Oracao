@@ -6,9 +6,10 @@ const token = require('../utils/token');
 
 const router = express.Router();
 
-// Middleware to check if the user is authenticated
 router.post('/', (req, res) => {
     const { refreshToken } = req.cookies;
+
+    console.log('req.cookies:', req.cookies);
 
     if (!refreshToken) {
         return res.status(401).json({ error: 'Não possui refresh token' });

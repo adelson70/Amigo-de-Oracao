@@ -16,9 +16,7 @@ const UsuarioService = {
         // Verifica a senha
         const senhaCorreta = await bcrypt.compare(senhaLogin, senha);
         
-        if (!senhaCorreta) {
-            throw new Error('Senha incorreta');
-        }
+        if (!senhaCorreta) return null;
 
        return {id, nome}
         

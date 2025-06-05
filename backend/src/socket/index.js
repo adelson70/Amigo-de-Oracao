@@ -8,35 +8,35 @@ const initSocket = (server) => {
     cors: {
       origin: '*',
       methods: ['GET', 'POST'],
-      credentials: true,
+      // credentials: true,
     },
   });
 
-  io.use((socket, next) => {
-    const token = socket.handshake.auth?.token;
+  // io.use((socket, next) => {
+  //   const token = socket.handshake.auth?.token;
 
-    console.log('SOCKET: Tentativa de conexão com token:', token);
-    console.log('SOCKET: Headers:', socket.handshake);
+  //   console.log('SOCKET: Tentativa de conexão com token:', token);
+  //   console.log('SOCKET: Headers:', socket.handshake);
     
-    if (!token) {
-      console.log('SOCKET: Token não fornecido');
-      return next(new Error('Token não fornecido'));
-    }
+  //   if (!token) {
+  //     console.log('SOCKET: Token não fornecido');
+  //     return next(new Error('Token não fornecido'));
+  //   }
 
-    try {
-      const user = jwt.verify(token, process.env.JWT_SECRET);
-      console.log('SOCKET: Token verificado com sucesso', user);
-      socket.user = user;
-      next();
+  //   try {
+  //     const user = jwt.verify(token, process.env.JWT_SECRET);
+  //     console.log('SOCKET: Token verificado com sucesso', user);
+  //     socket.user = user;
+  //     next();
 
-    } catch (error) {
-      console.error('SOCKET: Erro ao verificar token:', error);
-      return next(new Error('Token inválido'));
-    }
+  //   } catch (error) {
+  //     console.error('SOCKET: Erro ao verificar token:', error);
+  //     return next(new Error('Token inválido'));
+  //   }
 
-    console.log('SOCKET: Middleware de conexão');
-    next();
-  });
+  //   console.log('SOCKET: Middleware de conexão');
+  //   next();
+  // });
   
   console.log('SOCKET: INICIALIZADO');
 

@@ -3,21 +3,38 @@ import ButtonComponent from "../../components/ButtonComponent";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import './styles.css';
+import { Login } from "../../services/usuario";
 
 const LoginPage = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [usuario, setUsuario] = useState('');
+  const [senha, setSenha] = useState('');
   
-  const handleLogin = () => {
+  const handleLogin = async () => {
     // Aqui você pode adicionar a lógica de autenticação
-    console.log('Usuário:', username);
-    console.log('Senha:', password);
+    console.log('Usuário:', usuario);
+    console.log('Senha:', senha);
     
     // verifica se um dos campos está vazio
-    if (!username || !password) {
+    if (!usuario || !senha) {
       toast.warning('Por favor, preencha todos os campos.');
       return;
     }
+
+    await Login(usuario, senha)
+      .then(response => {
+        if (response.status === 200) {
+          toast.success('Login realizado com sucesso!'); 
+          localStorage.setItem('isLoggedIn', 'true');
+        }
+      })
+      .catch(error => {
+        if (error.response && error.response.status === 401) {
+          return toast.error('Usuário ou senha inválidos.');
+        }
+        return toast.error('Ocorreu um erro ao tentar fazer login. Tente novamente mais tarde.');
+      });
+
+
 
   }
 
@@ -33,8 +50,8 @@ const LoginPage = () => {
           <input
             type="text"
             id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={usuario}
+            onChange={(e) => setUsuario(e.target.value)}
             placeholder="Digite seu usuário"
             className="form-control"
           />
@@ -45,8 +62,8 @@ const LoginPage = () => {
           <input
             type="password"
             id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
             placeholder="Digite sua senha"
             className="form-control"
           />

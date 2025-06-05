@@ -6,7 +6,7 @@ const UsuarioController = {
   login: async (req, res) => {
     try {
       const { nome, senha } = req.body;
-      
+
       const usuario = await UsuarioService.login(nome, senha);
 
       if (!usuario) {

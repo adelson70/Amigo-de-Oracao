@@ -1,6 +1,5 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
-const cookieParser = require('cookie-parser');
 const ms = require('ms');
 
 const ACESS_TOKEN = {
@@ -28,12 +27,13 @@ const TokenService = {
     verifyRefreshToken: (token) => {
         return jwt.verify(token, REFRESH_TOKEN.secret);
     },
-
     setAccessTokenCookie: (res, token) => {
         res.cookie('access_token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            maxAge: ms(ACESS_TOKEN.expireIn)
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            maxAge: ms(ACESS_TOKEN.expireIn),
+            path: '/',
         });
     },
 
@@ -41,9 +41,12 @@ const TokenService = {
         res.cookie('refresh_token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
             maxAge: ms(REFRESH_TOKEN.expireIn),
+            path: '/api/refresh',
         });
     }
-};
+}
+
 
 module.exports = TokenService;
