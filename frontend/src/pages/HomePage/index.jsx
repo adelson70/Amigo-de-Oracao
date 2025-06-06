@@ -20,7 +20,7 @@ const HomePage = () => {
         navigate('/room/lobby');
         break;
       case 'CREATE':
-        navigate('/login');
+        navigate('/dashboard');
         break;
       default:
         console.error('Ação desconhecida:', action);

@@ -4,10 +4,15 @@ import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import './styles.css';
 import { Login } from "../../services/usuario";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [usuario, setUsuario] = useState('');
   const [senha, setSenha] = useState('');
+
+  console.log('LoginPage Renderizada');
+
+  const navigate = useNavigate();
   
   const handleLogin = async () => {
     // Aqui você pode adicionar a lógica de autenticação
@@ -25,6 +30,7 @@ const LoginPage = () => {
         if (response.status === 200) {
           toast.success('Login realizado com sucesso!'); 
           localStorage.setItem('isLoggedIn', 'true');
+          navigate('/dashboard');
         }
       })
       .catch(error => {

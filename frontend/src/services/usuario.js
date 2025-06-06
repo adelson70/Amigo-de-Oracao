@@ -7,3 +7,8 @@ export async function Login(usuario, senha) {
     });
     return reponse
 }
+
+export async function Me() {
+    const response = await api.get('/usuario/me');
+    return response;
+}

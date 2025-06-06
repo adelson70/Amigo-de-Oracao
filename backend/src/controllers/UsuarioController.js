@@ -53,8 +53,7 @@ const UsuarioController = {
 
   me: async (req, res) => {
     try {
-      // Implement user retrieval logic here
-      res.status(200).json({ message: 'User data retrieved successfully' });
+      res.status(200).json({ message: 'success' });
     } catch (error) {
       res.status(500).json({ error: 'Failed to retrieve user data' });
     }
