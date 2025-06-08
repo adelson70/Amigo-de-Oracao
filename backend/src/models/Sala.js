@@ -17,6 +17,10 @@ const Sala = database.define('Sala', {
     limite: {
         type: DataTypes.INTEGER,
         defaultValue: 0
+    },
+    status: {
+        type: DataTypes.STRING,
+        defaultValue: 'aberta'
     }
 }, {
     tableName: 'sala',
