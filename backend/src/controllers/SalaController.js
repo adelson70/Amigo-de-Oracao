@@ -57,7 +57,8 @@ const SalaController = {
     delete: async (req, res) => {
         try {
             const { token } = req.params;
-            const deleted = await SalaService.delete(token);
+            const { id } = req.user;
+            const deleted = await SalaService.delete(token, id);
             if (!deleted) {
                 return res.status(404).json({ error: 'Room not found' });
             }

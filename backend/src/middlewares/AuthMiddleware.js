@@ -13,7 +13,9 @@ const AuthMiddleware = (req, res, next) => {
             return res.status(403).json({ error: 'Token inválido.' });
         }
 
-        req.user = decoded;
+        const usuario = decoded.usuario;
+
+        req.user = usuario
         next();
     });
 }

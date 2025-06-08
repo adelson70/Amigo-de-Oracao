@@ -42,11 +42,11 @@ const SalaService = {
     }
   },
 
-  delete: async (token) => {
+  delete: async (token, user_id) => {
     try {
       return await Sala.update(
         { status: 'deletada' },
-        { where: { token } }
+        { where: { token, user_id } }
       );
     } catch (error) {
       throw new Error('Failed to delete room');
