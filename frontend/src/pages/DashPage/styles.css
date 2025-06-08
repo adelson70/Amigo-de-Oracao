@@ -1,0 +1,50 @@
+.dash-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.salas-table {
+    position: absolute;
+    top: 28%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.salas-table th,
+.salas-table td {
+    padding: 1rem;
+    text-align: center;
+}
+
+.salas-table th {
+  font-size: 1.2rem;
+  background-color: #FFF8DC;
+}
+
+.salas-table tr:hover {
+    background-color: #fff5ca;
+}
+
+.searchSala {
+    position: absolute;
+    top: 8%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.searchSala input {
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #003366;
+    padding-right: 30rem;
+    font-size: 1.2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease;
+    margin-inline: 1rem;
+}
