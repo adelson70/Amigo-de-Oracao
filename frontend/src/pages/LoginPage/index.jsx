@@ -10,14 +10,9 @@ const LoginPage = () => {
   const [usuario, setUsuario] = useState('');
   const [senha, setSenha] = useState('');
 
-  console.log('LoginPage Renderizada');
-
   const navigate = useNavigate();
   
   const handleLogin = async () => {
-    // Aqui você pode adicionar a lógica de autenticação
-    console.log('Usuário:', usuario);
-    console.log('Senha:', senha);
     
     // verifica se um dos campos está vazio
     if (!usuario || !senha) {
@@ -29,7 +24,6 @@ const LoginPage = () => {
       .then(response => {
         if (response.status === 200) {
           toast.success('Login realizado com sucesso!'); 
-          localStorage.setItem('isLoggedIn', 'true');
           navigate('/dashboard');
         }
       })

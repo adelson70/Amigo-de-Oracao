@@ -1,5 +1,4 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 import HomePage from '../pages/HomePage/index';
 import AboutPage from '../pages/AboutPage';
 import NotFound from '../pages/NotFound/index';
@@ -8,18 +7,40 @@ import RoomLobby from '../pages/RoomLobby';
 import LoginPage from '../pages/LoginPage';
 import DashPage from '../pages/DashPage/index';
 
-const AppRoutes = () => (
-  <Routes>
-    <Route path="/" element={<HomePage />} />
-    
-    <Route path="/login" element={<LoginPage />} />
-    <Route path='/dashboard' element={< DashPage/>} />
+import { publicLoader } from './loaders/publicLoader';
+import { protectedLoader } from './loaders/protectedLoader';
 
-    <Route path="/about" element={<AboutPage />} />
-    <Route path="/room/limit/:room" element={<RoomLimit />} />
-    <Route path="/room/lobby" element={<RoomLobby />} />
-    <Route path="*" element={<NotFound />} />
-  </Routes>
-);
+const AppRoutes = createBrowserRouter([
+  {
+    path: '/',
+    element: <HomePage />
+  },
+  {
+    path: '/login',
+    element: <LoginPage />,
+    loader: publicLoader
+  },
+  {
+    path: '/dashboard',
+    element: <DashPage />,
+    loader: protectedLoader
+  },
+  {
+    path: '/about',
+    element: <AboutPage />
+  },
+  {
+    path: '/room/limit/:room',
+    element: <RoomLimit />
+  },
+  {
+    path: '/room/lobby',
+    element: <RoomLobby />
+  },
+  {
+    path: '*',
+    element: <NotFound />
+  }
+]);
 
 export default AppRoutes;
