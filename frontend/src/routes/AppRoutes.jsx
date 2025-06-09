@@ -38,6 +38,10 @@ const AppRoutes = createBrowserRouter([
     element: <RoomLobby />
   },
   {
+    path: '/room/lobby/:room',
+    element: <RoomLobby />
+  },
+  {
     path: '*',
     element: <NotFound />
   }

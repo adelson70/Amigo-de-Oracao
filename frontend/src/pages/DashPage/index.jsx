@@ -7,16 +7,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faTrash, faShare, faUsers } from "@fortawesome/free-solid-svg-icons";
 import Swal from 'sweetalert2';
 
-
 const DashPage = () => {
   const [salas, setSalas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [salasFiltradas, setSalasFiltradas] = useState("");
 
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const handleDeleteSala = async (salaToken) => {
-    console.log("Deletando sala com ID:", salaToken);
     
     const result = await Swal.fire({
       title: 'Tem certeza?',
@@ -44,6 +43,21 @@ const DashPage = () => {
       }
     }
    
+  }
+
+  const handleShareSala = (salaToken) => {
+    navigator.clipboard.writeText(`${API_URL}/room/lobby/${salaToken}`)
+      .then(() => {
+        Swal.fire({
+          title: 'Sala Copiada!',
+          text: 'O link da sala foi copiado para a área de transferência.',
+          icon: 'success',
+          confirmButtonColor: '#6FA600'
+        });
+      })
+      .catch(() => {
+        Swal.fire('Erro!', 'Não foi possível copiar o token.', 'error');
+      });
   }
 
   const fetchSalas = async () => {
@@ -131,7 +145,7 @@ const DashPage = () => {
                       {sala.status === "aberta" ? (
                         <>
                           <ButtonComponent description={<FontAwesomeIcon icon={faUsers} size="lg" />} clickHandler={() => { }} popup="Entrar na Sala" background="#3cb371" />
-                          <ButtonComponent description={<FontAwesomeIcon icon={faShare} size="lg" />} clickHandler={() => { }}  popup="Compartilhar Sala" background="#0A4F9C"/>
+                          <ButtonComponent description={<FontAwesomeIcon icon={faShare} size="lg" />} clickHandler={() => {handleShareSala(sala.token)}}  popup="Compartilhar Sala" background="#0A4F9C"/>
                           <ButtonComponent description={<FontAwesomeIcon icon={faTrash} size="lg "/>} clickHandler={() => {handleDeleteSala(sala.token)}}  popup="Deletar Sala" background="#b22222"/>
                         </>
                       ) : (
