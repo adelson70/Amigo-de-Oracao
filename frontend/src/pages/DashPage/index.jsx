@@ -119,14 +119,19 @@ const DashPage = () => {
                   <td>{sala.token}</td>
                   <td>{new Date(sala.createdAt).toLocaleDateString()}</td>
                   <td>{sala.limite}</td>
-                  <td>{sala.status}</td>
+                  <td style={{
+                    color: sala.status === "aberta" ? "#206A2C" : "#8B1C1C",
+                    fontWeight: "bold",
+                    fontSize: "1.2rem",
+                    textTransform: "capitalize"
+                  }}>{sala.status}</td>
 
                   <td style={{ width: "20rem" }}>
                     <div style={{ display: "flex", gap: "0.7rem", justifyContent: "center", alignContent: "center" }}>
                       {sala.status === "aberta" ? (
                         <>
                           <ButtonComponent description={<FontAwesomeIcon icon={faUsers} size="lg" />} clickHandler={() => { }} popup="Entrar na Sala" background="#3cb371" />
-                          <ButtonComponent description={<FontAwesomeIcon icon={faShare} size="lg" />} clickHandler={() => { }}  popup="Compartilhar Sala"/>
+                          <ButtonComponent description={<FontAwesomeIcon icon={faShare} size="lg" />} clickHandler={() => { }}  popup="Compartilhar Sala" background="#0A4F9C"/>
                           <ButtonComponent description={<FontAwesomeIcon icon={faTrash} size="lg "/>} clickHandler={() => {handleDeleteSala(sala.token)}}  popup="Deletar Sala" background="#b22222"/>
                         </>
                       ) : (
