@@ -5,6 +5,8 @@ import { getSalas, createSala, deleteSala } from "../../services/sala";
 import ButtonComponent from "../../components/ButtonComponent";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faTrash, faShare, faUsers } from "@fortawesome/free-solid-svg-icons";
+import Swal from 'sweetalert2';
+
 
 const DashPage = () => {
   const [salas, setSalas] = useState([]);
@@ -12,6 +14,37 @@ const DashPage = () => {
   const [salasFiltradas, setSalasFiltradas] = useState("");
 
   const navigate = useNavigate();
+
+  const handleDeleteSala = async (salaToken) => {
+    console.log("Deletando sala com ID:", salaToken);
+    
+    const result = await Swal.fire({
+      title: 'Tem certeza?',
+      text: "Você não poderá reverter isso!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#6FA600',
+      cancelButtonColor: '#B22222',
+      confirmButtonText: 'Sim, deletar!',
+      cancelButtonText: 'Cancelar'
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await deleteSala(salaToken);
+        Swal.fire({
+          title: 'Deletada!',
+          text: 'A sala foi deletada.',
+          icon: 'success',
+          confirmButtonColor: '#6FA600'
+        });
+        fetchSalas();
+      } catch (error) {
+        Swal.fire('Erro!', 'Não foi possível deletar a sala.', 'error');
+      }
+    }
+   
+  }
 
   const fetchSalas = async () => {
     setLoading(true);
@@ -80,8 +113,8 @@ const DashPage = () => {
               </tr>
             </thead>
             <tbody>
-              {(salasFiltradas ? salasFiltradas : salas).map((sala) => (
-                <tr key={sala.id}>
+              {(salasFiltradas ? salasFiltradas : salas).map((sala, idx) => (
+                <tr key={sala.id || idx}>
                   <td>{sala.nome}</td>
                   <td>{sala.token}</td>
                   <td>{new Date(sala.createdAt).toLocaleDateString()}</td>
@@ -92,14 +125,14 @@ const DashPage = () => {
                     <div style={{ display: "flex", gap: "0.7rem", justifyContent: "center", alignContent: "center" }}>
                       {sala.status === "aberta" ? (
                         <>
-                          <ButtonComponent description={<FontAwesomeIcon icon={faUsers}/>} onClick={() => { }} popup="Entrar na Sala" />
-                          <ButtonComponent description={<FontAwesomeIcon icon={faShare}/>} onClick={() => { }}  popup="Compartilhar Sala"/>
-                          <ButtonComponent description={<FontAwesomeIcon icon={faTrash}/>} onClick={() => { }}  popup="Deletar Sala"/>
+                          <ButtonComponent description={<FontAwesomeIcon icon={faUsers} size="lg" />} clickHandler={() => { }} popup="Entrar na Sala" background="#3cb371" />
+                          <ButtonComponent description={<FontAwesomeIcon icon={faShare} size="lg" />} clickHandler={() => { }}  popup="Compartilhar Sala"/>
+                          <ButtonComponent description={<FontAwesomeIcon icon={faTrash} size="lg "/>} clickHandler={() => {handleDeleteSala(sala.token)}}  popup="Deletar Sala" background="#b22222"/>
                         </>
                       ) : (
                         <>
-                          <ButtonComponent description={<FontAwesomeIcon icon={faEye}/>} onClick={() => { }} popup="Visualizar Revelação" />
-                          <ButtonComponent description={<FontAwesomeIcon icon={faTrash}/>} onClick={() => { }} popup="Deletar Sala"/>
+                          <ButtonComponent description={<FontAwesomeIcon icon={faEye} size="lg" />} clickHandler={() => { }} popup="Visualizar Revelação" background="#778899" />
+                          <ButtonComponent description={<FontAwesomeIcon icon={faTrash} size="lg" />} clickHandler={() => {handleDeleteSala(sala.token)}} popup="Deletar Sala" background="#b22222"/>
                         </>
                       )}
                     </div>
