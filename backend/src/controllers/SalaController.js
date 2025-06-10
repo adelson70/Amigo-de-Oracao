@@ -31,7 +31,6 @@ const SalaController = {
         try {
             const { id } = req.user;
             const rooms = await SalaService.list(id);
-            console.log('Rooms listed:', rooms);
             return res.status(200).json(rooms);
         } catch (error) {
             return res.status(500).json({ error: 'Failed to list rooms' });
