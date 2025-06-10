@@ -1,9 +1,17 @@
 const SalaService = require('../services/SalaService');
+const generateQRCode = require('../utils/qrCode');
+const generateTokenSala = require('../utils/salaToken');
+require('dotenv').config();
+
 const SalaController = {
     create: async (req, res) => {
         try {
             const { id } = req.user;
-            const { token, nome, limite } = req.body;
+            const { nome, limite } = req.body;
+            const token = generateTokenSala();
+            const qrCodeData = `${process.env.FRONTEND_URL}/api/room/lobby/${token}`;
+
+            await generateQRCode(qrCodeData, token);
 
             const room = await SalaService.create({ 
                 user_id: id,
@@ -11,8 +19,10 @@ const SalaController = {
                 nome,
                 limit: limite
             });
+            
             return res.status(201).json(room);
         } catch (error) {
+            console.error('Error creating room:', error);
             return res.status(500).json({ error: 'Failed to create room' });
         }
     },

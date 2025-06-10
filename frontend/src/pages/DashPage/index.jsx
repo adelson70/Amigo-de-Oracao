@@ -37,12 +37,6 @@ const DashPage = () => {
         if (limiteInput) {
           limiteInput.addEventListener('input', (e) => {
             e.target.value = e.target.value.replace(/\D/g, '');
-            if (e.target.value < 2) {
-              e.target.value = '3';
-            }
-            if (e.target.value > 30) {
-              e.target.value = '30';
-            }
           });
         }
       },

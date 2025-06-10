@@ -22,7 +22,7 @@ export const deleteSala = async (token) => {
 
 export const createSala = async (sala) => {
   try {
-    const response = await api.post("/salas", sala);
+    const response = await api.post("/sala/create", sala);
     return response.data;
   } catch (error) {
     console.error("Error creating room:", error);
