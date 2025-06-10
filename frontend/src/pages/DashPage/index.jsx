@@ -6,6 +6,7 @@ import ButtonComponent from "../../components/ButtonComponent";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faTrash, faShare, faUsers } from "@fortawesome/free-solid-svg-icons";
 import Swal from 'sweetalert2';
+import { toast } from "react-toastify";
 
 const DashPage = () => {
   const [salas, setSalas] = useState([]);
@@ -15,8 +16,78 @@ const DashPage = () => {
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL;
 
+  const handleCreateSala = async () => {
+    const { value } = await Swal.fire({
+      title: 'Criar Sala',
+      html: `
+      <label for="swal-input-nome" style="display:block;text-align:center;margin-bottom:2px;">Nome da Sala</label>
+      <input id="swal-input-nome" class="swal2-input" placeholder="Nome da Sala" type="text" style="margin-bottom:10px; text-align:center;" maxlength="30">
+      <label for="swal-input-limite" style="display:block;text-align:center;margin-bottom:2px; padding-top:22px">Limite de Participantes (3-30)</label>
+      <input id="swal-input-limite" class="swal2-input" placeholder="Limite de Participantes (3-30)" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" style="text-align:center;">
+      `,
+      focusConfirm: false,
+      showCancelButton: true,
+      confirmButtonColor: '#6FA600',
+      cancelButtonColor: '#B22222',
+      confirmButtonText: 'Criar',
+      cancelButtonText: 'Cancelar',
+
+      didOpen: () => {
+        const limiteInput = document.getElementById('swal-input-limite');
+        if (limiteInput) {
+          limiteInput.addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/\D/g, '');
+            if (e.target.value < 2) {
+              e.target.value = '3';
+            }
+            if (e.target.value > 30) {
+              e.target.value = '30';
+            }
+          });
+        }
+      },
+
+      preConfirm: () => {
+        const nome = document.getElementById('swal-input-nome').value;
+        const limiteStr = document.getElementById('swal-input-limite').value;
+
+        // Remove any non-digit characters
+        const limiteClean = limiteStr.replace(/\D/g, '');
+        const limite = Number(limiteClean);
+
+        if (!nome || !limiteClean) {
+          toast.warning('Por favor, preencha todos os campos.');
+          return false;
+        }
+
+        if (!/^\d+$/.test(limiteClean) || limite < 3 || limite > 30) {
+          toast.warning('O limite deve ser um número entre 3 e 30.');
+          return false;
+        }
+
+        if (nome.length < 10 ){
+          toast.warning('O nome da sala deve ter pelo menos 10 caracteres.');
+          return false;
+        }
+
+        return { nome, limite };
+      }
+    });
+
+    if (value) {
+      try {
+        await createSala({nome: value.nome, limite: value.limite});
+        toast.success('Sala criada com sucesso!');
+        fetchSalas();
+      } catch (error) {
+        toast.error('Erro ao criar sala. Tente novamente.');
+        console.error("Error creating room:", error);
+      }
+    }
+  }
+
   const handleDeleteSala = async (salaToken) => {
-    
+
     const result = await Swal.fire({
       title: 'Tem certeza?',
       text: "Você não poderá reverter isso!",
@@ -42,7 +113,7 @@ const DashPage = () => {
         Swal.fire('Erro!', 'Não foi possível deletar a sala.', 'error');
       }
     }
-   
+
   }
 
   const handleShareSala = (salaToken) => {
@@ -104,7 +175,7 @@ const DashPage = () => {
 
         <ButtonComponent
           description="Criar Sala"
-          onClick={() => { }}
+          clickHandler={handleCreateSala}
           background="#6FA600"
         />
 
@@ -145,13 +216,13 @@ const DashPage = () => {
                       {sala.status === "aberta" ? (
                         <>
                           <ButtonComponent description={<FontAwesomeIcon icon={faUsers} size="lg" />} clickHandler={() => { }} popup="Entrar na Sala" background="#3cb371" />
-                          <ButtonComponent description={<FontAwesomeIcon icon={faShare} size="lg" />} clickHandler={() => {handleShareSala(sala.token)}}  popup="Compartilhar Sala" background="#0A4F9C"/>
-                          <ButtonComponent description={<FontAwesomeIcon icon={faTrash} size="lg "/>} clickHandler={() => {handleDeleteSala(sala.token)}}  popup="Deletar Sala" background="#b22222"/>
+                          <ButtonComponent description={<FontAwesomeIcon icon={faShare} size="lg" />} clickHandler={() => { handleShareSala(sala.token) }} popup="Compartilhar Sala" background="#0A4F9C" />
+                          <ButtonComponent description={<FontAwesomeIcon icon={faTrash} size="lg " />} clickHandler={() => { handleDeleteSala(sala.token) }} popup="Deletar Sala" background="#b22222" />
                         </>
                       ) : (
                         <>
                           <ButtonComponent description={<FontAwesomeIcon icon={faEye} size="lg" />} clickHandler={() => { }} popup="Visualizar Revelação" background="#778899" />
-                          <ButtonComponent description={<FontAwesomeIcon icon={faTrash} size="lg" />} clickHandler={() => {handleDeleteSala(sala.token)}} popup="Deletar Sala" background="#b22222"/>
+                          <ButtonComponent description={<FontAwesomeIcon icon={faTrash} size="lg" />} clickHandler={() => { handleDeleteSala(sala.token) }} popup="Deletar Sala" background="#b22222" />
                         </>
                       )}
                     </div>

@@ -9,7 +9,10 @@ import './App.css';
 const App = () => (
   <SocketProvider>
     <ApiProvider>
-      <ToastContainer/>
+      <ToastContainer
+        position="top-center"
+        toastStyle={{ width: 'auto' }}
+      />
       <RouterProvider router={AppRoutes} />
     </ApiProvider>
   </SocketProvider>
