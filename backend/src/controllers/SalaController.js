@@ -17,9 +17,9 @@ const SalaController = {
                 user_id: id,
                 token,
                 nome,
-                limit: limite
+                limite,
             });
-            
+
             return res.status(201).json(room);
         } catch (error) {
             console.error('Error creating room:', error);
@@ -31,6 +31,7 @@ const SalaController = {
         try {
             const { id } = req.user;
             const rooms = await SalaService.list(id);
+            console.log('Rooms listed:', rooms);
             return res.status(200).json(rooms);
         } catch (error) {
             return res.status(500).json({ error: 'Failed to list rooms' });
