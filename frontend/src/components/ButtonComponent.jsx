@@ -32,7 +32,7 @@ const ButtonComponent = ({
                     tooltip.style.padding = '6px 12px';
                     tooltip.style.borderRadius = '4px';
                     tooltip.style.whiteSpace = 'nowrap';
-                    tooltip.style.zIndex = 1000;
+                    tooltip.style.zIndex = 9000;
                     tooltip.className = 'custom-tooltip';
                     e.currentTarget.parentNode.appendChild(tooltip);
                 }
