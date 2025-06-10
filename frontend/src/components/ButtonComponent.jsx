@@ -32,8 +32,24 @@ const ButtonComponent = ({
                     tooltip.style.padding = '6px 12px';
                     tooltip.style.borderRadius = '4px';
                     tooltip.style.whiteSpace = 'nowrap';
-                    tooltip.style.zIndex = 9000;
+                    tooltip.style.zIndex = 9999;
                     tooltip.className = 'custom-tooltip';
+
+                    // Detecta se o botão está próximo do final do container
+                    const buttonRect = e.currentTarget.getBoundingClientRect();
+                    const container = e.currentTarget.closest('.salas-table-container');
+                    const containerRect = container ? container.getBoundingClientRect() : null;
+
+                    if (containerRect && (buttonRect.bottom + 40 > containerRect.bottom)) {
+                        // Mostra o tooltip acima do botão
+                        tooltip.style.top = 'auto';
+                        tooltip.style.bottom = '110%';
+                    } else {
+                        // Mostra o tooltip abaixo do botão
+                        tooltip.style.top = '110%';
+                        tooltip.style.bottom = 'auto';
+                    }
+
                     e.currentTarget.parentNode.appendChild(tooltip);
                 }
             }}

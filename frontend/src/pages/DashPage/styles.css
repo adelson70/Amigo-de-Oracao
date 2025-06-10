@@ -82,7 +82,12 @@ body::-webkit-scrollbar, html::-webkit-scrollbar {
 }
 
 /* Permitir rolagem apenas dentro do container da tabela */
-/* .salas-table-container {
+.salas-table-container {
     overflow-y: auto;
-    max-height: 450px; 
-}  */
+    max-height: 80vh;
+    scrollbar-width: none; /* Firefox */
+}
+
+.salas-table-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}

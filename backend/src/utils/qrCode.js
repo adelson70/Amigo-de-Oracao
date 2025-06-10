@@ -8,7 +8,7 @@ const { BucketService } = require('../services/BucketService');
 const generateQRCode = async (data, token) => {
   try {
     const qrCodePath = path.join(__dirname, `../temp/${token}.png`);
-    await qrcode.toFile(qrCodePath, data, { errorCorrectionLevel: 'H' });
+    await qrcode.toFile(qrCodePath, data, { errorCorrectionLevel: 'H', width: 700, height: 700 });
 
     const status = await BucketService.post(qrCodePath, `${token}.png`);
 
