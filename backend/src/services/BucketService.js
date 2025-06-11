@@ -11,10 +11,9 @@ const request_bucket = axios.create({
 });
 
 const BucketService = {
-    async get(arquivo) {
+    async get(token) {
         try {
-            const response = await request_bucket.get(`/upload/${arquivo}`);
-            return response.data;
+            return {url: `${process.env.BUCKET_API_URL}/upload/${token}.png`};
         } catch (error) {
             console.error('Error fetching buckets:', error);
             throw error;

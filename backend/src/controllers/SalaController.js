@@ -1,3 +1,4 @@
+const { BucketService } = require('../services/BucketService');
 const SalaService = require('../services/SalaService');
 const generateQRCode = require('../utils/qrCode');
 const generateTokenSala = require('../utils/salaToken');
@@ -76,6 +77,21 @@ const SalaController = {
         } catch (error) {
             return res.status(500).json({ error: 'Failed to delete room' });
         }
-    }
+    },
+
+    getQRCode: async (req, res) => {
+        try {
+            const { token } = req.params;
+            const qrCodeUrl = await BucketService.get(token);
+
+            if (!qrCodeUrl) {
+                return res.status(404).json({ error: 'QR Code not found' });
+            }
+            return res.status(200).json({ qrCodeUrl: qrCodeUrl.url });
+        } catch (error) {
+            console.error('Error fetching QR Code:', error);
+            return res.status(500).json({ error: 'Failed to fetch QR Code' });
+        }
+    },
 };
 module.exports = SalaController;

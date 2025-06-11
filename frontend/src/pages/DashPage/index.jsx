@@ -1,17 +1,21 @@
 import React, { useState, useEffect, use } from "react";
 import './styles.css';
 import { useNavigate } from "react-router-dom";
-import { getSalas, createSala, deleteSala } from "../../services/sala";
+import { getSalas, createSala, deleteSala, getQrCodeSala } from "../../services/sala";
 import ButtonComponent from "../../components/ButtonComponent";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faTrash, faShare, faUsers } from "@fortawesome/free-solid-svg-icons";
 import Swal from 'sweetalert2';
 import { toast } from "react-toastify";
+import SalaOracaoComponent from "../../components/SalaOracaoComponent";
+
 
 const DashPage = () => {
   const [salas, setSalas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [salasFiltradas, setSalasFiltradas] = useState("");
+  const [modalSalaOracao, setModalSalaOracao] = useState(false);
+  const [salaOracao, setSalaOracao] = useState({ nome: "", qrCodeUrl: "", token: "" });
 
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL;
@@ -153,12 +157,43 @@ const DashPage = () => {
     setSalasFiltradas(salasFiltradas);
   };
 
+  const handleOpenSalaOracao = () => {
+    setModalSalaOracao(true);
+  };
+  
+  const handleCloseSalaOracao = () => {
+    setModalSalaOracao(false);
+    setSalaOracao({ nome: "", qrCodeUrl: "", token: "" });
+  };
+
+  const handleSalaOracaoData = async (nome, token) => {
+    const { qrCodeUrl } = await getQrCodeSala(token);
+    
+    if (!qrCodeUrl) {
+      toast.error("Erro ao obter QR Code da sala.");
+      return;
+    }
+
+    setSalaOracao({ nome, qrCodeUrl, token });
+    handleOpenSalaOracao();
+  }
+
+  const handleSortear = () => {
+    handleCloseSalaOracao();
+    toast.info("Sorteio realizado com sucesso!");
+    fetchSalas();
+  }
+
   useEffect(() => {
     fetchSalas();
   }, []);
 
   return (
     <div className="dash-page">
+
+      { modalSalaOracao && (
+        <SalaOracaoComponent salaData={salaOracao} onClose={handleCloseSalaOracao} onSortear={handleSortear} />
+      )}
 
       <div className="searchSala">
         <input
@@ -209,7 +244,7 @@ const DashPage = () => {
                     <div style={{ display: "flex", gap: "0.7rem", justifyContent: "center", alignContent: "center" }}>
                       {sala.status === "aberta" ? (
                         <>
-                          <ButtonComponent description={<FontAwesomeIcon icon={faUsers} size="lg" />} clickHandler={() => { }} popup="Entrar na Sala" background="#3cb371" />
+                          <ButtonComponent description={<FontAwesomeIcon icon={faUsers} size="lg" />} clickHandler={() => {handleSalaOracaoData(sala.nome, sala.token)}} popup="Entrar na Sala" background="#3cb371" />
                           <ButtonComponent description={<FontAwesomeIcon icon={faShare} size="lg" />} clickHandler={() => { handleShareSala(sala.token) }} popup="Compartilhar Sala" background="#0A4F9C" />
                           <ButtonComponent description={<FontAwesomeIcon icon={faTrash} size="lg " />} clickHandler={() => { handleDeleteSala(sala.token) }} popup="Deletar Sala" background="#b22222" />
                         </>

@@ -1,0 +1,94 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(30, 30, 30, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.close-modal-btn {
+    display: block;
+    padding: 1rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 2.5rem;
+    color: #000;
+    align-self: flex-end;
+    margin-left: auto;
+}
+
+.close-modal-btn:hover {
+    color: #b22222;
+}
+
+.close-modal-btn:focus {
+    outline: none;
+}
+
+.modal-content.sala-oracao-modal {
+    position: relative;
+    background: #FFF8DC;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    padding: 2rem 2.5rem;
+    width: 94%;
+    height: 89%;
+    text-align: center;
+    animation: fadeInModal 0.3s;
+}
+
+
+@keyframes fadeInModal {
+    from { opacity: 0; transform: translateY(-20px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+
+.modal-content.sala-oracao-modal h1 {
+    position: relative;
+    top: -70px;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.sala-oracao-image {
+    position: relative;
+    top: -60px;
+    width: 20%;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+
+.modal-content.sala-oracao-modal h2 {
+    position: relative;
+    top: -50px;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+}
+.sala-oracao-actions {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.sala-oracao-participantes {
+    position: relative;
+    left: 0;
+    right: 0;
+    bottom: 3rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}

@@ -29,3 +29,13 @@ export const createSala = async (sala) => {
     throw error;
   }
 }
+
+export const getQrCodeSala = async (token) => {
+  try {
+    const response = await api.get(`/sala/qr-code/${token}`);
+    return response.data
+  } catch (error) {
+    console.error("Error fetching QR code for room:", error);
+    throw error;
+  }
+}

@@ -21,12 +21,7 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    // Handle response errors
-    if (error.response && error.response.status === 401) {
-      // Handle unauthorized access, e.g., redirect to login
-      console.error('ACESSO NÃO AUTORIZADO:', error);
-    }
-    if (error.response && error.response.status === 403) {
+    if (error.response && error.response.status === 401 || error.response.status === 401) {
       // Handle forbidden access
       console.error('ACESSO PROIBIDO:', error);
       api.post('/refresh')
