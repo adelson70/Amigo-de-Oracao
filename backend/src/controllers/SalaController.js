@@ -2,6 +2,7 @@ const { BucketService } = require('../services/BucketService');
 const SalaService = require('../services/SalaService');
 const generateQRCode = require('../utils/qrCode');
 const generateTokenSala = require('../utils/salaToken');
+const { generateTokenParticipante, setTokenParticipanteCookie } = require('../utils/token');
 require('dotenv').config();
 
 const SalaController = {
@@ -10,7 +11,7 @@ const SalaController = {
             const { id } = req.user;
             const { nome, limite } = req.body;
             const token = generateTokenSala();
-            const qrCodeData = `${process.env.FRONTEND_URL}/api/room/lobby/${token}`;
+            const qrCodeData = `${process.env.FRONTEND_URL}/room/lobby/${token}`;
 
             await generateQRCode(qrCodeData, token);
 
@@ -93,5 +94,63 @@ const SalaController = {
             return res.status(500).json({ error: 'Failed to fetch QR Code' });
         }
     },
+
+    verifyToken: async (req, res) => {
+        try {
+            const { token } = req.params;
+            const isValid = await SalaService.verifyToken(token);
+
+            if (!isValid) {
+                return res.status(200).json({ message: 'sala_nao_existe' });
+            }
+
+            return res.status(200).json({ message: isValid.status });
+        } catch (error) {
+            console.error('Error verifying token:', error);
+            return res.status(500).json({ error: 'Failed to verify token' });
+        }
+    },
+    join: async (req, res) => {
+        try {
+            const { token, nome } = req.body;
+
+            const participante = await SalaService.join(token, nome);
+
+            if (!participante) {
+                return res.status(200).json({ message: 'participante_existe' });
+            }
+            
+            const tokenParticipante = generateTokenParticipante(participante);
+
+            setTokenParticipanteCookie(res, tokenParticipante);
+
+            return res.status(200).json({message: 'Participante adicionado com sucesso'});
+        } catch (error) {
+            console.error('Error joining room:', error);
+            return res.status(500).json({ error: 'Failed to join room' });
+        }
+    },
+
+    isParticipante: async (req, res) => {
+        try {
+            const { nome, salaToken } = req.participante
+
+            if (!nome || !salaToken) {
+                return res.status(200).json({ isParticipante: false });
+            }
+
+            const salaSorteada = await SalaService.verifySorteio(nome, salaToken);
+
+            if (!salaSorteada) {
+                return res.status(200).json({ isParticipante: true, participante: req.participante });
+            }
+
+            return res.status(200).json({ isSorteado: true, sorteio: salaSorteada });
+
+        } catch (error) {
+            console.error('Error checking participant:', error);
+            return res.status(500).json({ error: 'Failed to check participant' });
+        }
+    }
 };
 module.exports = SalaController;

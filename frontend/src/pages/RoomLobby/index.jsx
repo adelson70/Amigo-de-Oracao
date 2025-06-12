@@ -1,29 +1,156 @@
-import React, { use, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { verifyTokenSala, enterSala, isParticipante } from '../../services/sala';
+import { toast } from 'react-toastify';
+import ButtonComponent from '../../components/ButtonComponent';
+import { FadeLoader, MoonLoader } from 'react-spinners';
 import './styles.css';
 
 const RoomLobby = () => {
-    
-    const acessRoom = (token) => {
-        console.log('Acessando a sala com o token:', token);
-    }
+    const params = useParams();
+    const navigate = useNavigate();
+    const [token, setToken] = useState(params.room || '');
+    const [nome, setNome] = useState('');
+    const [waiting, setWaiting] = useState(false);
+    const [sorteado, setSorteado] = useState(false);
 
     const handleChange = (event) => {
         const inputToken = event.target.value;
 
         if (/^[a-zA-Z]{0,6}$/.test(inputToken)) {
             if (inputToken.length === 6) {
-                acessRoom(inputToken);
+                checkSalaToken(inputToken);
             }
         }
-
     }
 
+    const checkSalaToken = async (salaToken) => {
+
+        if (salaToken) {
+            const response = await verifyTokenSala(salaToken);
+            const statusSala = response.message;
+
+            switch (statusSala) {
+                case 'aberta':
+                    setToken(salaToken);
+                    break;
+                case 'limite_excedido':
+                    toast.warning(`Sala do token ${salaToken.toUpperCase()} está com o limite de participantes máximo!`);
+                    navigate('/room/lobby');
+                    break;
+                case 'fechada':
+                    toast.warning(`Sala do token ${salaToken.toUpperCase()} está fechada!`);
+                    navigate('/room/lobby');
+                    break;
+                case 'sala_nao_existe':
+                    toast.warning(`Sala do token ${salaToken.toUpperCase()} não existe!`);
+                    break;
+                default:
+                    toast.error('Token inválido. Você será redirecionado para o lobby.');
+                    navigate('/room/lobby');
+            }
+        }
+    };
+
+    const checkIfParticipante = async () => {
+        try {
+            const response = await isParticipante();
+
+            if (response.isParticipante) {
+                setNome(response.participante.nome);
+                setToken(response.participante.salaToken);
+                setWaiting(true);
+                return true;
+
+            } else if (response.isSorteado) {
+                setSorteado(true);
+                return
+
+            } else {
+                setWaiting(false);
+                return false
+            }
+
+        } catch (error) {
+            console.error('Erro ao verificar se é participante:', error);
+            toast.error('Ocorreu um erro ao verificar sua participação na sala.');
+        }
+    }
+
+    const handleEnterRoom = async (token) => {
+        if (!nome) {
+            toast.error('Por favor, digite seu nome para entrar na sala.');
+            return;
+        }
+
+        try {
+            const response = await enterSala({ token, nome });
+
+            if (response.message === 'participante_existe') {
+                toast.warning('Este nome já está sendo usado na sala. Por favor, escolha outro nome.');
+                return
+            }
+
+            setWaiting(true);
+
+        } catch (error) {
+            console.error('Erro ao entrar na sala:', error);
+            toast.error('Ocorreu um erro ao tentar entrar na sala.');
+        }
+    }
+
+    useEffect(() => {
+        const isParticipante = checkIfParticipante();
+        if (isParticipante === false) {
+            if (!!token) checkSalaToken(token);
+        }
+    }, []);
 
     return (
         <div className='container'>
-            <h1 className='titulo'>Digite o TOKEN da sala de oração</h1>
-            <input type="text" className='token' maxLength={6} onChange={handleChange} />
+            {sorteado ? (
+                <>
+                    <h1 className='titulo'>Você foi sorteado!</h1>
+                    {/* Adicione aqui qualquer informação adicional para o sorteado */}
+                </>
+            ) : waiting ? (
+                <>
+                    <h1 className='titulo'>Aguardando Sorteio</h1>
+                    <MoonLoader
+                        color="#003366"
+                        speedMultiplier={0.32}
+                        size={100}
+                    />
+                </>
+            ) : token ? (
+                <>
+                    <h1 className='titulo'>Digite seu nome para entrar na sala</h1>
+                    <input
+                        type="text"
+                        className='nome'
+                        placeholder="Seu nome"
+                        maxLength={18}
+                        onChange={(e) => { setNome(e.target.value.toUpperCase()) }}
+                    />
+                    <div className='button-container'>
+                        <ButtonComponent
+                            description='Entrar'
+                            background='#6FA600'
+                            clickHandler={() => { handleEnterRoom(token) }}
+                        />
+                    </div>
+                </>
+            ) : (
+                <>
+                    <h1 className='titulo'>Digite o TOKEN da sala de oração</h1>
+                    <input
+                        type="text"
+                        className='token'
+                        maxLength={6}
+                        onChange={handleChange}
+                    />
+                </>
+            )}
         </div>
     );
 }

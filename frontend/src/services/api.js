@@ -21,19 +21,22 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.response && error.response.status === 401 || error.response.status === 401) {
+    if (error.response && error.response.status === 401) {
       // Handle forbidden access
       console.error('ACESSO PROIBIDO:', error);
+
       api.post('/refresh')
         .then((response) => {
           console.log('Token refreshed successfully:', response.data);
           const originalRequest = error.config;
-          originalRequest.headers['Authorization'] = `Bearer ${response.data.token}`;
+          // Ajuste para pegar o accessToken retornado pelo backend
+          originalRequest.headers['Authorization'] = `Bearer ${response.data.accessToken}`;
           return api(originalRequest);
         })
         .catch((refreshError) => {
           // Handle token refresh error
           console.error('Erro ao atualizar o token:', refreshError);
+          return Promise.reject(refreshError);
         });
     }
     return Promise.reject(error);

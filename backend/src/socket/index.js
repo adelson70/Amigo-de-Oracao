@@ -41,7 +41,7 @@ const initSocket = (server) => {
   console.log('SOCKET: INICIALIZADO');
 
   io.on('connection', (socket) => {
-    console.log('SOCKET: CLIENTE CONECTADO', socket.user);
+    console.log('SOCKET: CLIENTE CONECTADO', socket.id);
 
     socket.on('disconnect', (reason) => {
       console.log('SOCKET: CLIENTE DESCONECTADO', socket.id, 'Motivo:', reason);

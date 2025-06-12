@@ -10,7 +10,7 @@ const App = () => (
   <SocketProvider>
     <ApiProvider>
       <ToastContainer
-        position="top-center"
+        position="top-right"
         toastStyle={{ width: 'auto' }}
       />
       <RouterProvider router={AppRoutes} />

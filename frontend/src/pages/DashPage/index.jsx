@@ -117,15 +117,10 @@ const DashPage = () => {
   const handleShareSala = (salaToken) => {
     navigator.clipboard.writeText(`${API_URL}/room/lobby/${salaToken}`)
       .then(() => {
-        Swal.fire({
-          title: 'Sala Copiada!',
-          text: 'O link da sala foi copiado para a área de transferência.',
-          icon: 'success',
-          confirmButtonColor: '#6FA600'
-        });
+        toast.info('Link da sala copiado para a área de transferência!');
       })
       .catch(() => {
-        Swal.fire('Erro!', 'Não foi possível copiar o token.', 'error');
+        toast.error('Erro ao copiar o token. Tente novamente.');
       });
   }
 

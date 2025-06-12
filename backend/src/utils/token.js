@@ -11,6 +11,11 @@ const REFRESH_TOKEN = {
     expireIn: process.env.JWT_REFRESH_EXPIRES_IN
 }
 
+const PARTICIPANTE_TOKEN = {
+    secret: process.env.SECRET_ACESS_ROOM,
+    expireIn: process.env.EXPIRES_IN_ACESS_ROOM
+}
+
 const TokenService = {
     generateAccessToken: (usuario) => {
         return jwt.sign({ usuario }, ACESS_TOKEN.secret, { expiresIn: ACESS_TOKEN.expireIn });
@@ -45,7 +50,52 @@ const TokenService = {
             maxAge: ms(REFRESH_TOKEN.expireIn),
             path: '/api/refresh',
         });
+    },
+
+    clearAccessTokenCookie: (res) => {
+        res.cookie('access_token', '', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            maxAge: 0,
+        });
+    },
+
+    clearRefreshTokenCookie: (res) => {
+        res.cookie('refresh_token', '', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            maxAge: 0,
+        });
+    },
+
+    generateTokenParticipante: (participante) => {
+        return jwt.sign({ participante }, PARTICIPANTE_TOKEN.secret, { expiresIn: PARTICIPANTE_TOKEN.expireIn });
+    },
+
+    verifyTokenParticipante: (token) => {
+        return jwt.verify(token, PARTICIPANTE_TOKEN.secret);
+    },
+    
+    setTokenParticipanteCookie: (res, token) => {
+        res.cookie('token_participante', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            maxAge: ms(PARTICIPANTE_TOKEN.expireIn),
+        });
+    },
+
+    clearTokenParticipanteCookie: (res) => {
+        res.cookie('token_participante', '', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            maxAge: 0,
+        });
     }
+
 }
 
 

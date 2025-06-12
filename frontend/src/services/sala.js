@@ -39,3 +39,33 @@ export const getQrCodeSala = async (token) => {
     throw error;
   }
 }
+
+export const verifyTokenSala = async (token) => {
+  try {
+    const response = await api.get(`/sala/verify-token/${token}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error verifying room token:", error);
+    throw error;
+  }
+}
+
+export const enterSala = async (data) => {
+  try {
+    const response = await api.post(`/sala/join`, data);
+    return response.data;
+  } catch (error) {
+    console.error("Error entering room:", error);
+    throw error;
+  }
+}
+
+export const isParticipante = async () => {
+  try {
+    const response = await api.get(`/sala/is-participante`);
+    return response.data;
+  } catch (error) {
+    console.error("Error checking if participant exists:", error);
+    throw error;
+  }
+}
