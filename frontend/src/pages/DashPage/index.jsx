@@ -1,4 +1,4 @@
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import './styles.css';
 import { useNavigate } from "react-router-dom";
 import { getSalas, createSala, deleteSala, getQrCodeSala } from "../../services/sala";
@@ -18,7 +18,7 @@ const DashPage = () => {
   const [salaOracao, setSalaOracao] = useState({ nome: "", qrCodeUrl: "", token: "" });
 
   const navigate = useNavigate();
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = import.meta.env.VITE_ROUTE;
 
   const handleCreateSala = async () => {
     const { value } = await Swal.fire({
@@ -114,10 +114,10 @@ const DashPage = () => {
 
   }
 
-  const handleShareSala = (salaToken) => {
-    navigator.clipboard.writeText(`${API_URL}/room/lobby/${salaToken}`)
+  const handleShareSala = (sala) => {
+    navigator.clipboard.writeText(`${API_URL}/room/lobby/${sala.token}`)
       .then(() => {
-        toast.info('Link da sala copiado para a área de transferência!');
+        toast.info(`Link da sala "${sala.nome}" copiado para a área de transferência!`);
       })
       .catch(() => {
         toast.error('Erro ao copiar o token. Tente novamente.');
@@ -129,7 +129,6 @@ const DashPage = () => {
     try {
       const response = await getSalas();
       setSalas(response);
-      console.log("Salas fetched successfully:", response);
     } catch (error) {
       console.error("Error fetching rooms:", error);
     } finally {
@@ -240,7 +239,7 @@ const DashPage = () => {
                       {sala.status === "aberta" ? (
                         <>
                           <ButtonComponent description={<FontAwesomeIcon icon={faUsers} size="lg" />} clickHandler={() => {handleSalaOracaoData(sala.nome, sala.token)}} popup="Entrar na Sala" background="#3cb371" />
-                          <ButtonComponent description={<FontAwesomeIcon icon={faShare} size="lg" />} clickHandler={() => { handleShareSala(sala.token) }} popup="Compartilhar Sala" background="#0A4F9C" />
+                          <ButtonComponent description={<FontAwesomeIcon icon={faShare} size="lg" />} clickHandler={() => { handleShareSala(sala) }} popup="Compartilhar Sala" background="#0A4F9C" />
                           <ButtonComponent description={<FontAwesomeIcon icon={faTrash} size="lg " />} clickHandler={() => { handleDeleteSala(sala.token) }} popup="Deletar Sala" background="#b22222" />
                         </>
                       ) : (

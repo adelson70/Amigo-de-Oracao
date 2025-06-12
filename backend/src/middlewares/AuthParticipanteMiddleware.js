@@ -7,7 +7,7 @@ const AuthParticipanteMiddleware = (req, res, next) => {
 
     if (!tokenParticipante) {
         console.log('Middleware: Token de participante não fornecido');
-        return res.status(401).json({ error: 'Token de participante não fornecido' });
+        return res.status(200).json({ message: 'token_participante_invalido' });
     }
 
     try {
@@ -16,7 +16,7 @@ const AuthParticipanteMiddleware = (req, res, next) => {
         return next(); 
     } catch (error) {
         console.error('Middleware: Erro ao verificar token de participante:', error);
-        return res.status(401).json({ error: 'Token de participante inválido' });
+        return res.status(200).json({ message: 'Token de participante inválido' });
     }
 }
 
