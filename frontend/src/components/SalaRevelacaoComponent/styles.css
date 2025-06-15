@@ -1,0 +1,85 @@
+.modal-sala-revelacao-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(30, 30, 30, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeInModal 0.3s;
+}
+
+@keyframes fadeInModal {
+    from { opacity: 0; transform: translateY(-20px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+
+.modal-sala-revelacao-content.sala-revelacao-modal {
+    position: relative;
+    background: #FFF8DC;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    padding: 2rem 2.5rem;
+    min-width: 320px;
+    max-width: 90vw;
+    max-height: 60vh;
+    overflow-y: auto;
+    text-align: center;
+    animation: fadeInModal 0.3s;
+}
+
+.modal-sala-revelacao-close-modal-btn {
+    display: block;
+    padding: 0.5rem 1rem 0 1rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 2.5rem;
+    color: #000;
+    align-self: flex-start;
+    margin-left: 1rem;
+    margin-top: -1rem;
+    transition: color 0.2s;
+}
+
+.modal-sala-revelacao-close-modal-btn:hover {
+    color: #b22222;
+}
+
+.modal-sala-revelacao-close-modal-btn:focus {
+    outline: none;
+}
+
+.modal-sala-revelacao-content.sala-revelacao-modal h2 {
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    color: #003366;
+    text-align: center;
+}
+
+.modal-sala-revelacao-content.sala-revelacao-modal ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.modal-sala-revelacao-content.sala-revelacao-modal li {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 1.1rem;
+    color: #003366;
+}
+
+.modal-sala-revelacao-content.sala-revelacao-modal li:last-child {
+    border-bottom: none;
+}
+
+.modal-sala-revelacao-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}

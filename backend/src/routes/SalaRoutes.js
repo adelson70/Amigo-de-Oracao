@@ -14,5 +14,6 @@ router.get('/is-participante', AuthParticipant, SalaController.isParticipante);
 router.delete('/:token', Auth, SalaController.delete);
 router.get('/participantes/:token', Auth, SalaController.getParticipantes);
 router.post('/sorteio', Auth, SalaController.sorteio);
+router.get('/sorteio/:token', Auth, SalaController.getSorteio);
 
 module.exports = router;

@@ -89,3 +89,13 @@ export const sortearParticipante = async (token) => {
     throw error;
   }
 }
+
+export const revelacaoParticipante = async (token) => {
+  try {
+    const response = await api.get(`/sala/sorteio/${token}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error revealing participant:", error);
+    throw error;
+  }
+}

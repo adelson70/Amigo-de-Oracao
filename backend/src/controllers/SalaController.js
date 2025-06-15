@@ -185,6 +185,23 @@ const SalaController = {
             console.error('Error performing sorteio:', error);
             return res.status(500).json({ error: 'Failed to perform sorteio' });
         }
-    }
+    },
+
+    getSorteio: async (req, res) => {
+        try {
+            const { token } = req.params;
+
+            const sorteio = await SalaService.getSorteio(token);
+
+            if (!sorteio) {
+                return res.status(404).json({ error: 'Sorteio não encontrado' });
+            }
+
+            return res.status(200).json(sorteio);
+        } catch (error) {
+            console.error('Error fetching sorteio:', error);
+            return res.status(500).json({ error: 'Failed to fetch sorteio' });
+        }
+    },
 };
 module.exports = SalaController;

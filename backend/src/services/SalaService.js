@@ -168,8 +168,6 @@ const SalaService = {
         nome_amigo,
       }));
 
-
-
       await Sorteio.bulkCreate(sorteioArr);
       await Sala.update(
         { status: 'fechada' },
@@ -186,6 +184,25 @@ const SalaService = {
     } catch (error) {
       console.error('Error performing sorteio:', error);
       throw new Error('Failed to perform sorteio');
+    }
+  },
+
+  getSorteio: async (token) => {
+    try {
+      const sorteio = await Sorteio.findAll({
+        where: { token },
+        raw: true,
+        attributes: ['meu_nome', 'nome_amigo'],
+      });
+
+      if (!sorteio || sorteio.length === 0) {
+        return null;
+      }
+
+      return sorteio
+    } catch (error) {
+      console.error('Error retrieving sorteio:', error);
+      throw new Error('Failed to retrieve sorteio');
     }
   }
 };

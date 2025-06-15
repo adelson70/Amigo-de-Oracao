@@ -1,22 +1,24 @@
-import React, { useState, useEffect } from "react";
 import './styles.css';
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getSalas, createSala, deleteSala, getQrCodeSala, sortearParticipante } from "../../services/sala";
+import { getSalas, createSala, deleteSala, getQrCodeSala, sortearParticipante, revelacaoParticipante } from "../../services/sala";
 import ButtonComponent from "../../components/ButtonComponent";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faTrash, faShare, faUsers } from "@fortawesome/free-solid-svg-icons";
 import Swal from 'sweetalert2';
 import { toast } from "react-toastify";
 import SalaOracaoComponent from "../../components/SalaOracaoComponent";
+import SalaRevelacaoComponent from "../../components/SalaRevelacaoComponent";
 import { useSocket } from "../../context/SocketContext";
-
 
 const DashPage = () => {
   const [salas, setSalas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [salasFiltradas, setSalasFiltradas] = useState("");
   const [modalSalaOracao, setModalSalaOracao] = useState(false);
+  const [modalSalaRevelacao, setModalSalaRevelacao] = useState(false);
   const [salaOracao, setSalaOracao] = useState({ nome: "", qrCodeUrl: "", token: "" });
+  const [salaRevelacao, setSalaRevelacao] = useState(null);
   const Socket = useSocket();
 
   const navigate = useNavigate();
@@ -195,6 +197,12 @@ const DashPage = () => {
     fetchSalas();
   }
 
+  const handleRevelacao = async (token) => {
+    const reponse = await revelacaoParticipante(token)
+    setModalSalaRevelacao(true);
+    setSalaRevelacao(reponse);
+  }
+
   useEffect(() => {
     fetchSalas();
   }, []);
@@ -204,6 +212,10 @@ const DashPage = () => {
 
       { modalSalaOracao && (
         <SalaOracaoComponent salaData={salaOracao} onClose={handleCloseSalaOracao} onSortear={handleSortear} />
+      )}
+
+      { modalSalaRevelacao && (
+        <SalaRevelacaoComponent salaData={salaRevelacao} onClose={() => setModalSalaRevelacao(false)} />
       )}
 
       <div className="searchSala">
@@ -261,7 +273,7 @@ const DashPage = () => {
                         </>
                       ) : (
                         <>
-                          <ButtonComponent description={<FontAwesomeIcon icon={faEye} size="lg" />} clickHandler={() => { }} popup="Visualizar Revelação" background="#778899" />
+                          <ButtonComponent description={<FontAwesomeIcon icon={faEye} size="lg" />} clickHandler={() => { handleRevelacao(sala.token) }} popup="Visualizar Revelação" background="#778899" />
                           <ButtonComponent description={<FontAwesomeIcon icon={faTrash} size="lg" />} clickHandler={() => { handleDeleteSala(sala.token) }} popup="Deletar Sala" background="#b22222" />
                         </>
                       )}
