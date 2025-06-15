@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import './styles.css';
 import { useNavigate } from "react-router-dom";
-import { getSalas, createSala, deleteSala, getQrCodeSala } from "../../services/sala";
+import { getSalas, createSala, deleteSala, getQrCodeSala, sortearParticipante } from "../../services/sala";
 import ButtonComponent from "../../components/ButtonComponent";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faTrash, faShare, faUsers } from "@fortawesome/free-solid-svg-icons";
@@ -177,7 +177,19 @@ const DashPage = () => {
 
   }
 
-  const handleSortear = () => {
+  const handleSortear = async () => {
+    if (!salaOracao.token) {
+      toast.error("Nenhuma sala selecionada para sortear.");
+      return;
+    }
+    const response = await sortearParticipante(salaOracao.token)
+    
+    switch (response.status) {
+      case 'quantidade_minima':
+        toast.warning(response.message);
+        return;
+    }
+
     handleCloseSalaOracao();
     toast.info("Sorteio realizado com sucesso!");
     fetchSalas();

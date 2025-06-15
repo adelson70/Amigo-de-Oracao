@@ -167,6 +167,24 @@ const SalaController = {
             console.error('Error fetching participants:', error);
             return res.status(500).json({ error: 'Failed to fetch participants' });
         }
+    },
+
+
+    sorteio: async (req, res) => {
+        try {
+            const { token } = req.body;
+
+            const sorteio = await SalaService.sorteio(token);
+
+            if (!sorteio) {
+                return res.status(404).json({ error: 'Sorteio não encontrado' });
+            }
+
+            return res.status(200).json(sorteio);
+        } catch (error) {
+            console.error('Error performing sorteio:', error);
+            return res.status(500).json({ error: 'Failed to perform sorteio' });
+        }
     }
 };
 module.exports = SalaController;

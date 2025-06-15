@@ -4,8 +4,8 @@ import { verifyTokenSala, enterSala, isParticipante } from '../../services/sala'
 import { toast } from 'react-toastify';
 import ButtonComponent from '../../components/ButtonComponent';
 import { FadeLoader, MoonLoader } from 'react-spinners';
-import './styles.css';
 import { useSocket } from '../../context/SocketContext';
+import './styles.css';
 
 
 const RoomLobby = () => {
@@ -15,7 +15,14 @@ const RoomLobby = () => {
     const [nome, setNome] = useState('');
     const [waiting, setWaiting] = useState(false);
     const [sorteado, setSorteado] = useState(false);
+    const [amigo, setAmigo] = useState(null);
     const Socket = useSocket();
+
+    Socket.on('sorteioRealizado', (data) => {
+        setAmigo(data[nome])
+        setSorteado(true);
+        setWaiting(false);
+    })
 
     const handleChange = (event) => {
         const inputToken = event.target.value;
@@ -71,6 +78,8 @@ const RoomLobby = () => {
 
             } else if (response.isSorteado) {
                 setSorteado(true);
+                setAmigo(response.sorteio.nome_amigo);
+                setWaiting(false);
                 return
 
             } else {
@@ -122,8 +131,10 @@ const RoomLobby = () => {
         <div className='container'>
             {sorteado ? (
                 <>
-                    <h1 className='titulo'>Você foi sorteado!</h1>
-                    {/* Adicione aqui qualquer informação adicional para o sorteado */}
+                    <div className='sorteio-container'>
+                        <h1 className='sorteio-amigo'>{amigo}</h1>
+                        <h1 className='sorteio'>é a pessoa por quem você estará em oração</h1>
+                    </div>
                 </>
             ) : waiting ? (
                 <>

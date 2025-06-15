@@ -79,3 +79,13 @@ export const listarParticipantes = async (token) => {
     throw error;
   }
 }
+
+export const sortearParticipante = async (token) => {
+  try {
+    const response = await api.post(`/sala/sorteio`, { token });
+    return response.data;
+  } catch (error) {
+    console.error("Error drawing participant:", error);
+    throw error;
+  }
+}

@@ -135,6 +135,58 @@ const SalaService = {
       console.error('Error retrieving participants:', error);
       throw new Error('Failed to retrieve participants');
     }
+  },
+
+  sorteio: async (token) => {
+    try {
+      const sorteio = {}
+      
+      let participantes = await Participante.findAll({
+        where: { token },
+        attributes: ['nome'],
+        raw: true,
+      });
+
+      if (!participantes || participantes.length === 0 || participantes.length <= 2) {
+        return { message: 'Não há participantes suficientes para realizar o sorteio.', status: 'quantidade_minima' };
+      }
+
+      participantes = participantes
+        .map(participante => participante.nome)
+        .sort(() => Math.random() - 0.33);
+
+      for (let i = 0; i < participantes.length; i++) {
+        const meuNome = participantes[i];
+        const nomeAmigo = participantes[(i + 1) % participantes.length];
+        sorteio[meuNome] = nomeAmigo;
+      }
+
+      // Salva o sorteio no banco
+      const sorteioArr = Object.entries(sorteio).map(([meu_nome, nome_amigo]) => ({
+        token,
+        meu_nome,
+        nome_amigo,
+      }));
+
+
+
+      await Sorteio.bulkCreate(sorteioArr);
+      await Sala.update(
+        { status: 'fechada' },
+        { where: { token } }
+      );
+
+      // envia para room o sorteio socket
+      const socket = require('../socket').getIO();
+      socket.to(token).emit('sorteioRealizado', sorteio);
+
+
+      return null
+      
+    } catch (error) {
+      console.error('Error performing sorteio:', error);
+      throw new Error('Failed to perform sorteio');
+    }
   }
 };
 

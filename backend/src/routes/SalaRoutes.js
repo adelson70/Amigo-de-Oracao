@@ -13,5 +13,6 @@ router.post('/join', SalaController.join);
 router.get('/is-participante', AuthParticipant, SalaController.isParticipante);
 router.delete('/:token', Auth, SalaController.delete);
 router.get('/participantes/:token', Auth, SalaController.getParticipantes);
+router.post('/sorteio', Auth, SalaController.sorteio);
 
 module.exports = router;
