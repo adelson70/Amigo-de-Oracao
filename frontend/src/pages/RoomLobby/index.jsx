@@ -5,6 +5,8 @@ import { toast } from 'react-toastify';
 import ButtonComponent from '../../components/ButtonComponent';
 import { FadeLoader, MoonLoader } from 'react-spinners';
 import './styles.css';
+import { useSocket } from '../../context/SocketContext';
+
 
 const RoomLobby = () => {
     const params = useParams();
@@ -13,6 +15,7 @@ const RoomLobby = () => {
     const [nome, setNome] = useState('');
     const [waiting, setWaiting] = useState(false);
     const [sorteado, setSorteado] = useState(false);
+    const Socket = useSocket();
 
     const handleChange = (event) => {
         const inputToken = event.target.value;
@@ -36,6 +39,9 @@ const RoomLobby = () => {
                     break;
                 case 'limite_excedido':
                     toast.warning(`Sala do token ${salaToken.toUpperCase()} está com o limite de participantes máximo!`);
+                    setToken('');
+                    setNome('');
+                    setWaiting(false);
                     navigate('/room/lobby');
                     break;
                 case 'fechada':
@@ -60,6 +66,7 @@ const RoomLobby = () => {
                 setNome(response.participante.nome);
                 setToken(response.participante.salaToken);
                 setWaiting(true);
+                Socket.emit('entrar_sala', { token: response.participante.salaToken, nome: response.participante.nome });
                 return true;
 
             } else if (response.isSorteado) {
@@ -93,6 +100,8 @@ const RoomLobby = () => {
 
             setWaiting(true);
 
+            Socket.emit('entrar_sala', { token, nome });
+
         } catch (error) {
             console.error('Erro ao entrar na sala:', error);
             toast.error('Ocorreu um erro ao tentar entrar na sala.');
@@ -100,10 +109,13 @@ const RoomLobby = () => {
     }
 
     useEffect(() => {
-        const isParticipante = checkIfParticipante();
-        if (isParticipante === false) {
-            if (!!token) checkSalaToken(token);
-        }
+        const check = async () => {
+            const isParticipanteResult = await checkIfParticipante();
+            if (isParticipanteResult === false) {
+                if (!!token) checkSalaToken(token);
+            }
+        };
+        check();
     }, []);
 
     return (

@@ -8,6 +8,7 @@ import { faEye, faTrash, faShare, faUsers } from "@fortawesome/free-solid-svg-ic
 import Swal from 'sweetalert2';
 import { toast } from "react-toastify";
 import SalaOracaoComponent from "../../components/SalaOracaoComponent";
+import { useSocket } from "../../context/SocketContext";
 
 
 const DashPage = () => {
@@ -16,6 +17,7 @@ const DashPage = () => {
   const [salasFiltradas, setSalasFiltradas] = useState("");
   const [modalSalaOracao, setModalSalaOracao] = useState(false);
   const [salaOracao, setSalaOracao] = useState({ nome: "", qrCodeUrl: "", token: "" });
+  const Socket = useSocket();
 
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_ROUTE;
@@ -157,6 +159,7 @@ const DashPage = () => {
   
   const handleCloseSalaOracao = () => {
     setModalSalaOracao(false);
+    Socket.emit("sair_sala", { token: salaOracao.token, nome: "ADMIN" });
     setSalaOracao({ nome: "", qrCodeUrl: "", token: "" });
   };
 
@@ -170,6 +173,8 @@ const DashPage = () => {
 
     setSalaOracao({ nome, qrCodeUrl, token });
     handleOpenSalaOracao();
+    Socket.emit("entrar_sala", { token, nome: "ADMIN" });
+
   }
 
   const handleSortear = () => {

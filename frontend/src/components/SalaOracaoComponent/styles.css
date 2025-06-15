@@ -87,8 +87,17 @@
     position: relative;
     left: 0;
     right: 0;
-    bottom: 3rem;
+    bottom: 2rem;
     display: flex;
     justify-content: center;
-    gap: 1rem;
+    gap: 1rem;;
+}
+
+.sala-oracao-participantes span {
+    background-color: #b0c4de;
+    padding: 5px 10px;
+    border-radius: 8px;
+    color: #003366;
+    font-size: 1.2rem;
+    font-weight: bold;
 }

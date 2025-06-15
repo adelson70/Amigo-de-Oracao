@@ -12,5 +12,6 @@ router.get('/verify-token/:token', SalaController.verifyToken);
 router.post('/join', SalaController.join);
 router.get('/is-participante', AuthParticipant, SalaController.isParticipante);
 router.delete('/:token', Auth, SalaController.delete);
+router.get('/participantes/:token', Auth, SalaController.getParticipantes);
 
 module.exports = router;

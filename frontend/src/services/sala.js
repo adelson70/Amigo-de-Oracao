@@ -69,3 +69,13 @@ export const isParticipante = async () => {
     throw error;
   }
 }
+
+export const listarParticipantes = async (token) => {
+  try {
+    const response = await api.get(`/sala/participantes/${token}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error listing participants:", error);
+    throw error;
+  }
+}

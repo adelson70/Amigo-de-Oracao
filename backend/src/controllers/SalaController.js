@@ -151,6 +151,22 @@ const SalaController = {
             console.error('Error checking participant:', error);
             return res.status(500).json({ error: 'Failed to check participant' });
         }
+    },
+
+    getParticipantes: async (req, res) => {
+        try {
+            const { token } = req.params;
+            const participantes = await SalaService.getParticipantes(token);
+
+            if (!participantes) {
+                return res.status(404).json({ error: 'No participants found' });
+            }
+
+            return res.status(200).json(participantes);
+        } catch (error) {
+            console.error('Error fetching participants:', error);
+            return res.status(500).json({ error: 'Failed to fetch participants' });
+        }
     }
 };
 module.exports = SalaController;

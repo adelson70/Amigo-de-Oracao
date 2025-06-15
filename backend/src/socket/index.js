@@ -48,9 +48,18 @@ const initSocket = (server) => {
     });
 
     // Exemplo de evento personalizado
-    socket.on('mensagem', (data) => {
-      console.log('Mensagem recebida:', data);
-      io.emit('resposta', {message: 'pong'});
+    socket.on('entrar_sala', (data) => {
+      const { token, nome } = data;
+      console.log(`SOCKET: ${nome} entrou na sala ${token}`);
+      socket.join(token);
+      io.to(token).emit('participanteEntrou', { nome });
+    });
+
+    socket.on('sair_sala', (data) => {
+      const { token, nome } = data;
+      console.log(`SOCKET: ${nome} saiu da sala ${token}`);
+      socket.leave(token);
+      io.to(token).emit('participanteSaiu', { nome });
     });
 
   });

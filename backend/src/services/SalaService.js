@@ -1,4 +1,3 @@
-const { verify } = require('jsonwebtoken');
 const Sala = require('../models/Sala');
 const Participante = require('../models/Participante');
 const Sorteio = require('../models/Sorteio');
@@ -65,7 +64,9 @@ const SalaService = {
 
       if (room.status === 'fechada') return { status: 'fechada' };
 
-      const limiteExcedido = await Participante.count({where: { token: room.token }}) === room.limite;
+      const participantesAtuais = await Participante.count({where: { token: room.token }});
+
+      const limiteExcedido = participantesAtuais >= room.limite;
 
       if (limiteExcedido) return { status: 'limite_excedido' };
 
@@ -87,7 +88,9 @@ const SalaService = {
       }
       
       const participante = await Participante.create({ token, nome });
+      
       return { nome: participante.nome, salaToken: participante.token };
+
     } catch (error) {
       console.error('Error joining room:', error);
       throw new Error('Failed to join room');
@@ -109,6 +112,28 @@ const SalaService = {
     } catch (error) {
       console.error('Error verifying sorteio:', error);
       throw new Error('Failed to verify sorteio');
+    }
+  },
+
+  getParticipantes: async (token) => {
+    try {
+      let participantes = await Participante.findAll({
+        where: { token },
+        attributes: ['nome'],
+        raw: true,
+      });
+
+      if (!participantes || participantes.length === 0) {
+        return [];
+      }
+
+      // Map to extract only the names
+      participantes = participantes.map(participante => participante.nome);
+
+      return participantes;
+    } catch (error) {
+      console.error('Error retrieving participants:', error);
+      throw new Error('Failed to retrieve participants');
     }
   }
 };

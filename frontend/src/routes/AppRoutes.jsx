@@ -39,7 +39,8 @@ const AppRoutes = createBrowserRouter([
   },
   {
     path: '/room/lobby/:room',
-    element: <RoomLobby />
+    element: <RoomLobby />,
+    // loader: verifyTokenSalaLoader
   },
   {
     path: '*',
