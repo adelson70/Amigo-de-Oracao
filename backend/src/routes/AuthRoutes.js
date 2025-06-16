@@ -7,28 +7,27 @@ const token = require('../utils/token');
 const router = express.Router();
 
 router.post('/', (req, res) => {
-    const { refreshToken } = req.cookies;
+    const { refresh_token } = req.cookies;
 
-    console.log('req.cookies:', req.cookies);
-
-    if (!refreshToken) {
+    if (!refresh_token) {
         return res.status(401).json({ error: 'Não possui refresh token' });
     }
 
-    jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, decoded) => {
+    jwt.verify(refresh_token, process.env.JWT_REFRESH_SECRET, (err, decoded) => {
         if (err) {
             return res.status(403).json({ error: 'Token inválido' });
         }
 
+        const usuario = decoded.usuario
+        
         // Extraia o userId do payload decodificado
-        const userId = decoded.id || decoded.userId || decoded.sub;
-        if (!userId) {
+        if (!usuario) {
             return res.status(400).json({ error: 'Payload do token inválido' });
         }
 
         // Use as funções utilitárias para gerar e definir os tokens
-        const accessToken = token.generateAccessToken(userId);
-        const newRefreshToken = token.generateRefreshToken(userId);
+        const accessToken = token.generateAccessToken(usuario);
+        const newRefreshToken = token.generateRefreshToken(usuario);
 
         token.setAccessTokenCookie(res, accessToken);
         token.setRefreshTokenCookie(res, newRefreshToken);

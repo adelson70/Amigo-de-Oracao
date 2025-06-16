@@ -179,7 +179,7 @@ const SalaService = {
       socket.to(token).emit('sorteioRealizado', sorteio);
 
 
-      return null
+      return {status: 'sorteio_realizado', message: 'Sorteio realizado com sucesso!'};
       
     } catch (error) {
       console.error('Error performing sorteio:', error);
