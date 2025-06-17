@@ -9,6 +9,7 @@ import DashPage from '../pages/DashPage/index';
 
 import { publicLoader } from './loaders/publicLoader';
 import { protectedLoader } from './loaders/protectedLoader';
+import { verifyTokenSalaLoader } from './loaders/verifyTokenSalaLoader';
 
 const AppRoutes = createBrowserRouter([
   {
@@ -40,7 +41,7 @@ const AppRoutes = createBrowserRouter([
   {
     path: '/room/lobby/:room',
     element: <RoomLobby />,
-    // loader: verifyTokenSalaLoader
+    loader: verifyTokenSalaLoader
   },
   {
     path: '*',

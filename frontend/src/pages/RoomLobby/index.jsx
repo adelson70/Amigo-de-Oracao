@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { verifyTokenSala, enterSala, isParticipante } from '../../services/sala';
+import React, { useState } from 'react';
+import { useNavigate, useParams, useLoaderData } from 'react-router-dom';
+import { enterSala, verifyTokenSala } from '../../services/sala';
 import { toast } from 'react-toastify';
 import ButtonComponent from '../../components/ButtonComponent';
-import { FadeLoader, MoonLoader } from 'react-spinners';
+import { MoonLoader } from 'react-spinners';
 import { useSocket } from '../../context/SocketContext';
 import './styles.css';
-
 
 const RoomLobby = () => {
     const params = useParams();
     const navigate = useNavigate();
-    const [token, setToken] = useState(params.room || '');
-    const [nome, setNome] = useState('');
-    const [waiting, setWaiting] = useState(false);
-    const [sorteado, setSorteado] = useState(false);
-    const [amigo, setAmigo] = useState(null);
+    const loaderData = useLoaderData();
+    const [token, setToken] = useState(loaderData.token || '');
+    const [nome, setNome] = useState(loaderData.nome || '');
+    const [waiting, setWaiting] = useState(loaderData.waiting || false);
+    const [sorteado, setSorteado] = useState(loaderData.sorteado || false);
+    const [amigo, setAmigo] = useState(loaderData.amigo || null);
     const Socket = useSocket();
 
     Socket.on('sorteioRealizado', (data) => {
@@ -65,34 +65,6 @@ const RoomLobby = () => {
         }
     };
 
-    const checkIfParticipante = async () => {
-        try {
-            const response = await isParticipante();
-
-            if (response.isParticipante) {
-                setNome(response.participante.nome);
-                setToken(response.participante.salaToken);
-                setWaiting(true);
-                Socket.emit('entrar_sala', { token: response.participante.salaToken, nome: response.participante.nome });
-                return true;
-
-            } else if (response.isSorteado) {
-                setSorteado(true);
-                setAmigo(response.sorteio.nome_amigo);
-                setWaiting(false);
-                return
-
-            } else {
-                setWaiting(false);
-                return false
-            }
-
-        } catch (error) {
-            console.error('Erro ao verificar se é participante:', error);
-            toast.error('Ocorreu um erro ao verificar sua participação na sala.');
-        }
-    }
-
     const handleEnterRoom = async (token) => {
         if (!nome) {
             toast.error('Por favor, digite seu nome para entrar na sala.');
@@ -116,16 +88,6 @@ const RoomLobby = () => {
             toast.error('Ocorreu um erro ao tentar entrar na sala.');
         }
     }
-
-    useEffect(() => {
-        const check = async () => {
-            const isParticipanteResult = await checkIfParticipante();
-            if (isParticipanteResult === false) {
-                if (!!token) checkSalaToken(token);
-            }
-        };
-        check();
-    }, []);
 
     return (
         <div className='container'>
