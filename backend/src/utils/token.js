@@ -67,6 +67,7 @@ const TokenService = {
             secure: process.env.NODE_ENV === 'production',
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
             maxAge: 0,
+            path: '/api/refresh',
         });
     },
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, useParams, useLoaderData } from 'react-router-dom';
+import { useNavigate, useLoaderData } from 'react-router-dom';
 import { enterSala, verifyTokenSala } from '../../services/sala';
 import { toast } from 'react-toastify';
 import ButtonComponent from '../../components/ButtonComponent';
@@ -8,7 +8,6 @@ import { useSocket } from '../../context/SocketContext';
 import './styles.css';
 
 const RoomLobby = () => {
-    const params = useParams();
     const navigate = useNavigate();
     const loaderData = useLoaderData();
     const [token, setToken] = useState(loaderData.token || '');

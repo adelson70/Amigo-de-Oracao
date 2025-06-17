@@ -12,3 +12,8 @@ export async function Me() {
     const response = await api.get('/usuario/me');
     return response;
 }
+
+export async function Logout() {
+    const response = await api.post('/usuario/logout');
+    return response;
+}

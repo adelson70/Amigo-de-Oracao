@@ -1,0 +1,67 @@
+.profile-component {
+    position: relative;
+    display: inline-block;
+}
+
+.profile-component button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    outline: none;
+}
+
+.profile-icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    outline: none;
+    transition: filter 0.2s;
+}
+
+.profile-icon-btn:focus,
+.profile-icon-btn:hover {
+    filter: brightness(0.85);
+}
+
+.profile-dropdown {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: #fff;
+    border: 1px solid #ddd;
+    /* border-radius: 4px; */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    min-width: 140px;
+    z-index: 100;
+    margin-top: 8px;
+    padding: 4px 0;
+    animation: dropdownFadeIn 0.2s;
+}
+
+@keyframes dropdownFadeIn {
+    from { opacity: 0; transform: translateY(-8px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+
+.dropdown-item {
+    width: 100%;
+    padding: 10px 16px;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #333;
+    transition: background 0.15s, color 0.15s;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+    background: #ddd !important;
+    border-radius: 0%;
+    color: #003366;
+    outline: none !important;
+    font-weight: 700;
+}

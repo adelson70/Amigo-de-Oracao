@@ -10,6 +10,8 @@ import { toast } from "react-toastify";
 import SalaOracaoComponent from "../../components/SalaOracaoComponent";
 import SalaRevelacaoComponent from "../../components/SalaRevelacaoComponent";
 import { useSocket } from "../../context/SocketContext";
+import ProfileComponent from '../../components/ProfileComponent';
+import { Logout } from '../../services/usuario';
 
 const DashPage = () => {
   const [salas, setSalas] = useState([]);
@@ -203,12 +205,44 @@ const DashPage = () => {
     setSalaRevelacao(reponse);
   }
 
+  const handleProfileAction = (action) => {
+    switch (action) {
+      case 'perfil':
+        // abrir modal com email e senha para poder alterar
+        break;
+      case 'sair':
+        Swal.fire({
+          title: 'Sair',
+          text: "Você tem certeza que deseja sair?",
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonColor: '#6FA600',
+          cancelButtonColor: '#B22222',
+          confirmButtonText: 'Sim, sair!',
+          cancelButtonText: 'Cancelar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            Logout().then(() => {
+              navigate('/login');
+            })
+          }
+        });
+        break;
+      default:
+        break;
+    }
+  }
+
   useEffect(() => {
     fetchSalas();
   }, []);
 
   return (
     <div className="dash-page">
+      {/* ProfileComponent no canto superior direito */}
+      <div style={{ position: "absolute", top: 20, right: 20, zIndex: 10 }}>
+        <ProfileComponent onMenuClick={handleProfileAction} />
+      </div>
 
       { modalSalaOracao && (
         <SalaOracaoComponent salaData={salaOracao} onClose={handleCloseSalaOracao} onSortear={handleSortear} />
@@ -230,14 +264,12 @@ const DashPage = () => {
           clickHandler={handleCreateSala}
           background="#6FA600"
         />
-
       </div>
 
       {loading ? (
         <div className="loading">Carregando...</div>
       ) : (
         <div className="salas-table-container">
-
           <table className="salas-table">
             <thead>
               <tr>
@@ -262,7 +294,6 @@ const DashPage = () => {
                     fontSize: "1.2rem",
                     textTransform: "capitalize"
                   }}>{sala.status}</td>
-
                   <td style={{ width: "20rem" }}>
                     <div style={{ display: "flex", gap: "0.7rem", justifyContent: "center", alignContent: "center" }}>
                       {sala.status === "aberta" ? (
@@ -279,7 +310,6 @@ const DashPage = () => {
                       )}
                     </div>
                   </td>
-
                 </tr>
               ))}
             </tbody>
