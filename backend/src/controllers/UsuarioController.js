@@ -6,9 +6,9 @@ const bcrypt = require('bcrypt');
 const UsuarioController = {
   login: async (req, res) => {
     try {
-      const { nome, senha } = req.body;
+      const { email, senha } = req.body;
 
-      const usuario = await UsuarioService.login(nome, senha);
+      const usuario = await UsuarioService.login(email, senha);
 
       if (!usuario) {
         return res.status(401).json({ error: 'credenciais_invalidas' });
@@ -25,7 +25,8 @@ const UsuarioController = {
         refreshToken,
         usuario: {
           id: usuario.id,
-          nome: usuario.nome
+          nome: usuario.nome,
+          email: usuario.email
         }
       });
 
@@ -70,7 +71,8 @@ const UsuarioController = {
       }
       res.status(200).json({
           id: usuario.id,
-          nome: usuario.nome
+          nome: usuario.nome,
+          email: usuario.email
         
       });
     } catch (error) {

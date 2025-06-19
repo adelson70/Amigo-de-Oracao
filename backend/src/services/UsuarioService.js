@@ -3,29 +3,28 @@ const bcrypt = require('bcrypt');
 require('dotenv').config();
 
 const messages = {
-  nome_atualizado: 'Nome atualizado com sucesso',
+  email_atualizado: 'Nome atualizado com sucesso',
   senha_atualizada: 'Senha atualizada com sucesso',
   sem_campos_para_atualizar: 'Sem campos para atualizar',
-  nome_e_senha_atualizados: 'Nome e senha atualizados com sucesso',
+  email_e_senha_atualizados: 'Nome e senha atualizados com sucesso',
 }
 
 const UsuarioService = {
-  async login(nomeLogin, senhaLogin) {
+  async login(emailLogin, senhaLogin) {
     try {
         // Verifica se o usuário existe
-        const usuario = await Usuario.findOne({ where: { nome: nomeLogin }, raw: true });
+        const usuario = await Usuario.findOne({ where: { email: emailLogin }, raw: true });
 
-        
         if (!usuario) return null;
 
-        const { id, nome, senha } = usuario || {};
+        const { id, nome, senha, email } = usuario || {};
 
         // Verifica a senha
         const senhaCorreta = await bcrypt.compare(senhaLogin, senha);
         
         if (!senhaCorreta) return null;
 
-       return {id, nome}
+       return {id, nome, email}
         
     }
     catch (error) {
@@ -41,9 +40,9 @@ const UsuarioService = {
 
       if (!usuario) return null;
 
-      const { id, nome } = usuario;
+      const { id, nome, email } = usuario;
 
-      return { id, nome };
+      return { id, nome, email };
     } catch (error) {
       console.error('Error during getById:', error);
       throw error;

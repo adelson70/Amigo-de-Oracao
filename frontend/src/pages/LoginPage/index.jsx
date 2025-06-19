@@ -7,7 +7,7 @@ import { Login } from "../../services/usuario";
 import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
-  const [usuario, setUsuario] = useState('');
+  const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
 
   const navigate = useNavigate();
@@ -15,12 +15,12 @@ const LoginPage = () => {
   const handleLogin = async () => {
     
     // verifica se um dos campos está vazio
-    if (!usuario || !senha) {
+    if (!email || !senha) {
       toast.warning('Por favor, preencha todos os campos.');
       return;
     }
 
-    await Login(usuario, senha)
+    await Login(email, senha)
       .then(response => {
         if (response.status === 200) {
           toast.success('Login realizado com sucesso!'); 
@@ -29,7 +29,7 @@ const LoginPage = () => {
       })
       .catch(error => {
         if (error.response && error.response.status === 401) {
-          return toast.error('Usuário ou senha inválidos.');
+          return toast.error('E-mail ou senha inválidos.');
         }
         return toast.error('Ocorreu um erro ao tentar fazer login. Tente novamente mais tarde.');
       });
@@ -37,6 +37,19 @@ const LoginPage = () => {
 
 
   }
+
+  const validateEmail = (email) => {
+    // Regex simples para validação de e-mail
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
+
+  const handleEmailBlur = () => {
+    if (email && !validateEmail(email)) {
+      toast.error('Por favor, insira um e-mail válido.');
+    } 
+    
+  };
 
   return (
     <div className="login-page">
@@ -46,13 +59,14 @@ const LoginPage = () => {
       <div className="login-container">
 
         <div className="form-group">
-          <label htmlFor="username">Usuário</label>
+          <label htmlFor="username">E-mail</label>
           <input
             type="text"
             id="username"
-            value={usuario}
-            onChange={(e) => setUsuario(e.target.value)}
-            placeholder="Digite seu usuário"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            onBlur={handleEmailBlur}
+            placeholder="Digite seu e-mail"
             className="form-control"
           />
         </div>
