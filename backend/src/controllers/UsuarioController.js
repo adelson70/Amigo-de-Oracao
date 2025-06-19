@@ -1,6 +1,7 @@
 require('dotenv').config();
 const token = require('../utils/token');
 const UsuarioService = require('../services/UsuarioService');
+const bcrypt = require('bcrypt');
 
 const UsuarioController = {
   login: async (req, res) => {
@@ -57,6 +58,43 @@ const UsuarioController = {
       res.status(200).json({ message: 'success' });
     } catch (error) {
       res.status(500).json({ error: 'Failed to retrieve user data' });
+    }
+  },
+
+  info: async (req, res) => {
+    try {
+      const { id } = req.user
+      const usuario = await UsuarioService.getById(id);
+      if (!usuario) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      res.status(200).json({
+          id: usuario.id,
+          nome: usuario.nome
+        
+      });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to retrieve user info' });
+    }
+  },
+
+  update: async (req, res) => {
+    try {
+      const { senha } = req.body;
+      const { id } = req.user;
+
+      const dataUpdate = { id };
+
+      if (typeof senha === 'string' && senha.trim().length > 0) {
+        dataUpdate.senha = await bcrypt.hash(senha, 10)
+      }
+
+      const response = await UsuarioService.update(dataUpdate);
+
+      res.status(200).json({ message: response.message });
+    } catch (error) {
+      console.error('Error updating user:', error);
+      res.status(500).json({ error: 'Failed to update user' });
     }
   }
   

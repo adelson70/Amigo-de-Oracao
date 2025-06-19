@@ -11,7 +11,7 @@ import SalaOracaoComponent from "../../components/SalaOracaoComponent";
 import SalaRevelacaoComponent from "../../components/SalaRevelacaoComponent";
 import { useSocket } from "../../context/SocketContext";
 import ProfileComponent from '../../components/ProfileComponent';
-import { Logout } from '../../services/usuario';
+import { Info, Logout, UpdateUsuario } from '../../services/usuario';
 
 const DashPage = () => {
   const [salas, setSalas] = useState([]);
@@ -205,10 +205,41 @@ const DashPage = () => {
     setSalaRevelacao(reponse);
   }
 
-  const handleProfileAction = (action) => {
+  const handleProfileAction = async (action) => {
     switch (action) {
       case 'perfil':
         // abrir modal com email e senha para poder alterar
+        const usuario = await Info()
+        Swal.fire({
+          title: 'Perfil',
+          html: `
+            <label for="swal-input-nome" style="display:block;text-align:center;margin-bottom:2px;">Nome</label>
+            <input id="swal-input-nome" class="swal2-input" placeholder="Nome" type="text" style="margin-bottom:10px; text-align:center;" value="${usuario.nome}" maxlength="30" disabled>
+            <label for="swal-input-senha" style="display:block;text-align:center;margin-bottom:2px; padding-top:22px">Senha</label>
+            <input id="swal-input-senha" class="swal2-input" placeholder="Senha" type="password" style="text-align:center;">
+          `,
+          focusConfirm: false,
+          showCancelButton: true,
+          confirmButtonColor: '#6FA600',
+          cancelButtonColor: '#B22222',
+          confirmButtonText: 'Salvar',
+          cancelButtonText: 'Cancelar',
+          preConfirm: () => {
+            const senha = document.getElementById('swal-input-senha').value;
+
+            if (senha && senha.length < 7) {
+              toast.warning('A senha deve ter pelo menos 7 caracteres.');
+              return false;
+            }
+
+            return
+          }
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            const senha = document.getElementById('swal-input-senha').value;
+            const response = await UpdateUsuario(senha);
+            if (response) toast.info(response.message);
+          }})
         break;
       case 'sair':
         Swal.fire({
