@@ -89,10 +89,10 @@ const UsuarioService = {
       const reponse = await sendEmail(usuario)      
 
       if (!reponse) {
-        return { message: 'Erro ao enviar e-mail de redefinição de senha.' };
+        return { message: 'Erro ao enviar e-mail de redefinição de senha.', status:'error' };
       }
 
-      return { message: 'Instruções para redefinir a senha foram enviadas para o seu e-mail.' };
+      return { message: 'Instruções para redefinir a senha foram enviadas para o seu e-mail.', status: 'success' };
     } catch (error) {
       console.error('Error during esqueciMinhaSenha:', error);
       throw error;

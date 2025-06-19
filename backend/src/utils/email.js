@@ -7,12 +7,18 @@ require('dotenv').config();
 
 const recovery = {
     token_expires_in: process.env.TOKEN_RECOVERY_PASSWORD_EXPIRES_IN || '1h',
-    from: process.env.EMAIL_FROM || '',
-    host: process.env.EMAIL_HOST || '',
-    port: process.env.EMAIL_PORT || 587,
-    user: process.env.EMAIL_USER || '',
-    pass: process.env.EMAIL_PASSWORD || ''
+    from: process.env.EMAIL_USER || '',
+    pass: process.env.EMAIL_PASSWORD || '',
+    fromName: process.env.EMAIL_FROM_NAME || 'Recuperação de Senha',
 }
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: recovery.from,
+        pass: recovery.pass
+    }
+});
 
 const sendEmail = async (usuario) => {
     try {
@@ -33,11 +39,34 @@ const sendEmail = async (usuario) => {
             return false;
         }
 
-        const resetLink = `${process.env.FRONTEND_URL}/recuperar-senha/${token}`;
+        // garantir que o token n venha como [object obeject]
+        const tokenString = JSON.stringify(token);
+        const tokenObj = JSON.parse(tokenString);
 
-        console.log('Link de recuperação:', resetLink);
+        const resetLink = `${process.env.FRONTEND_URL}/recuperar-senha/${tokenObj.token || tokenObj}`;
 
+        const mailOptions = {
+            from: `"${recovery.fromName}" <${recovery.from}>`,
+            to: email,
+            subject: 'Recuperação de Senha',
+            html: `
+            <div style="max-width: 480px; margin: 40px auto; padding: 32px 24px; border-radius: 12px; background: #f9f9f9; box-shadow: 0 2px 12px rgba(0,0,0,0.07); font-family: Arial, sans-serif; text-align: center;">
+                <h1 style="color: #2d7ff9; margin-bottom: 16px;">Recuperação de Senha</h1>
+                <p style="font-size: 16px; color: #333; margin-bottom: 24px;">
+                Você solicitou a recuperação de senha.<br>
+                Clique no botão abaixo para redefinir sua senha:
+                </p>
+                <a href="${resetLink}" style="display: inline-block; padding: 12px 32px; background: #2d7ff9; color: #fff; border-radius: 6px; text-decoration: none; font-size: 16px; font-weight: bold; margin-bottom: 24px;">
+                Redefinir Senha
+                </a>
+                <p style="font-size: 14px; color: #888; margin-top: 24px;">
+                O link é válido por <b>${recovery.token_expires_in}</b>.
+                </p>
+            </div>
+            `
+        };
 
+        await transporter.sendMail(mailOptions);
 
         return true
     

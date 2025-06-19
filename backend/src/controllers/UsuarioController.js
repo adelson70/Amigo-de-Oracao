@@ -106,7 +106,7 @@ const UsuarioController = {
 
       const response = await UsuarioService.esqueciMinhaSenha(email);
 
-      res.status(200).json({ message: response.message });
+      res.status(200).json({ message: response.message, status: response.status || 200 });
     } catch (error) {
       res.status(500).json({ error: 'Failed to send password reset link' });
     }
