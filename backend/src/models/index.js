@@ -5,13 +5,15 @@ const Usuario = require('./Usuario');
 const Sala = require('./Sala');
 const Sorteio = require('./Sorteio');
 const Participante = require('./Participante');
+const RecuperacaoSenha = require('./RecuperacaoSenha');
 
 // Objeto que contém todos os modelos
 const models = {
     Usuario,
     Sala,
     Sorteio,
-    Participante
+    Participante,
+    RecuperacaoSenha
 };
 
 // Aplicar associações se existirem

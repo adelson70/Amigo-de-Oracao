@@ -98,6 +98,39 @@ const UsuarioController = {
       console.error('Error updating user:', error);
       res.status(500).json({ error: 'Failed to update user' });
     }
+  },
+
+  esqueciMinhaSenha: async (req, res) => {
+    try {
+      const { email } = req.body;
+
+      const response = await UsuarioService.esqueciMinhaSenha(email);
+
+      res.status(200).json({ message: response.message });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to send password reset link' });
+    }
+  },
+
+  redefinirSenha: async (req, res) => {
+    try {
+      const { token } = req.params;
+      const { senha } = req.body;
+
+      if (!token) {
+        return res.status(400).json({ error: 'Token are required' });
+      }
+
+      const response = await UsuarioService.redefinirSenha(token, senha);
+
+      if (response.error) {
+        return res.status(400).json({ error: response.error });
+      }
+
+      res.status(200).json({ message: response.message, status: response.status || 200});
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to reset password' });
+    }
   }
   
 };

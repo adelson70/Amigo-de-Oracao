@@ -1,6 +1,7 @@
 const { database } = require('../config/pg');
 const { DataTypes } = require('sequelize');
 
+
 const Usuario = database.define('Usuario', {
     id: {
         type: DataTypes.INTEGER,

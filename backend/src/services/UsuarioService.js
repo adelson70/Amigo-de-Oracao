@@ -1,5 +1,7 @@
 const Usuario = require('../models/Usuario');
 const bcrypt = require('bcrypt');
+const { sendEmail } = require('../utils/email');
+const RecuperacaoSenha = require('../models/RecuperacaoSenha');
 require('dotenv').config();
 
 const messages = {
@@ -73,6 +75,48 @@ const UsuarioService = {
       return {message}
     } catch (error) {
       console.error('Error during update:', error);
+      throw error;
+    }
+  },
+
+  async esqueciMinhaSenha(email) {
+    try {
+      // Verifica se o usuário existe
+      const usuario = await Usuario.findOne({ where: { email }, raw: true });
+
+      if (!usuario) return { message: 'Usuário não encontrado' };
+
+      const reponse = await sendEmail(usuario)      
+
+      if (!reponse) {
+        return { message: 'Erro ao enviar e-mail de redefinição de senha.' };
+      }
+
+      return { message: 'Instruções para redefinir a senha foram enviadas para o seu e-mail.' };
+    } catch (error) {
+      console.error('Error during esqueciMinhaSenha:', error);
+      throw error;
+    }
+  },
+
+  async redefinirSenha(token, novaSenha) {
+    try {
+      // Verifica se o token é válido
+      const tokenValido = await RecuperacaoSenha.isValidToken(token);
+
+      if (!tokenValido) return { message: 'Token inválido ou expirado.', status: 400 };
+
+      if (!novaSenha || novaSenha.trim().length === 0) {
+        return true
+      }
+
+      // Atualiza a senha do usuário
+      const hashedPassword = await bcrypt.hash(novaSenha, 10);
+      await Usuario.update({ senha: hashedPassword }, { where: { id: tokenValido.user_id } });
+
+      return { message: 'Senha redefinida com sucesso.' };
+    } catch (error) {
+      console.error('Error during redefinirSenha:', error);
       throw error;
     }
   }
