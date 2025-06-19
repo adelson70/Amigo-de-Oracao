@@ -63,9 +63,23 @@ const LoginPage = () => {
       return;
     }
 
+    toast.info('Enviando informações')
+
     const response = await EsqueciMinhaSenha(email);
 
-    toast.info(response.message);
+    console.log(response);
+
+    switch (response.status) {
+      case 'success':
+        toast.success(response.message);
+        break;
+
+      case 'error':
+        toast.error(response.message);
+        break;
+    }
+
+    return
   }
 
   return (
