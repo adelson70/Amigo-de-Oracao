@@ -6,10 +6,12 @@ import RoomLimit from '../pages/RoomLimit/index';
 import RoomLobby from '../pages/RoomLobby';
 import LoginPage from '../pages/LoginPage';
 import DashPage from '../pages/DashPage/index';
+import RecoveryPassword from '../pages/RecoveyPassword';
 
 import { publicLoader } from './loaders/publicLoader';
 import { protectedLoader } from './loaders/protectedLoader';
 import { verifyTokenSalaLoader } from './loaders/verifyTokenSalaLoader';
+import { verifyTokenRecoveryLoader } from './loaders/verifyTokenRecoveryLoader';
 
 const AppRoutes = createBrowserRouter([
   {
@@ -43,6 +45,11 @@ const AppRoutes = createBrowserRouter([
     path: '/room/lobby/:room',
     element: <RoomLobby />,
     loader: verifyTokenSalaLoader
+  },
+  {
+    path: '/recuperar-senha/:token',
+    element: <RecoveryPassword />,
+    loader: verifyTokenRecoveryLoader
   },
   {
     path: '*',

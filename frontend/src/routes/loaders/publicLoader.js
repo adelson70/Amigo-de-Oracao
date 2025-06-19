@@ -10,10 +10,10 @@ export async function publicLoader() {
       return redirect("/dashboard");
     }
 
-    return null
+    return true
 
   } catch (error) {
     console.error("Error loading user:", error);
-    return null
+    return true
   }
 }

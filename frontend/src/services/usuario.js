@@ -29,3 +29,17 @@ export async function UpdateUsuario(senha) {
     });
     return response.data;
 }
+
+export async function EsqueciMinhaSenha(email) {
+    const response = await api.post('/usuario/esqueci-minha-senha', {
+        email
+    });
+    return response.data;
+}
+
+export async function RecuperarSenha(token, senha) {
+    const response = await api.post(`/usuario/esqueci-minha-senha/${token}`, {
+        senha
+    });
+    return response.data;
+}

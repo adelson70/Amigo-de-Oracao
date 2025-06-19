@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ButtonComponent from "../../components/ButtonComponent";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import './styles.css';
-import { Login } from "../../services/usuario";
+import { EsqueciMinhaSenha, Login } from "../../services/usuario";
 import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-
+  const [modalRegistrar, setModalRegistrar] = useState(false);
   const navigate = useNavigate();
+  
+
   
   const handleLogin = async () => {
     
@@ -51,6 +53,21 @@ const LoginPage = () => {
     
   };
 
+  const handleSenhaEsquecida = async () => {
+    if (!email) {
+      toast.warning('Por favor, insira seu e-mail para recuperação de senha.');
+      return;
+    }
+    if (!validateEmail(email)) {
+      toast.error('Por favor, insira um e-mail válido para recuperação de senha.');
+      return;
+    }
+
+    const response = await EsqueciMinhaSenha(email);
+
+    toast.info(response.message);
+  }
+
   return (
     <div className="login-page">
 
@@ -88,7 +105,7 @@ const LoginPage = () => {
 
           <div className="login-links">
             <p>Não tem uma conta? <a href="/register">Registrar</a></p>
-            <p><a href="/forgot-password">Esqueci minha senha</a></p>
+            <p><a style={{ cursor: 'pointer' }} onClick={handleSenhaEsquecida}>Esqueci minha senha</a></p>
           </div>
 
         </div>
