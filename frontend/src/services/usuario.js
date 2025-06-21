@@ -43,3 +43,15 @@ export async function RecuperarSenha(token, senha) {
     });
     return response.data;
 }
+
+export async function TokenRecuperacaoIsValid(token) {
+    const response = await api.get(`/usuario/esqueci-minha-senha/${token}`);
+    return response.data;
+}
+
+export async function RedefinirSenha(token, senha) {
+    const response = await api.post(`/usuario/esqueci-minha-senha/${token}`, {
+        senha
+    });
+    return response.data;
+}

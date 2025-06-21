@@ -119,6 +119,20 @@ const UsuarioService = {
       console.error('Error during redefinirSenha:', error);
       throw error;
     }
+  },
+
+  async verificarTokenEsqueciMinhaSenha(token) {
+    try {
+      // Verifica se o token é válido
+      const tokenValido = await RecuperacaoSenha.isValidToken(token);
+
+      if (!tokenValido) return { message: 'Token inválido ou expirado.', status: 400 };
+
+      return { message: 'Token válido.', status: 200 };
+    } catch (error) {
+      console.error('Error during verificarTokenEsqueciMinhaSenha:', error);
+      throw error;
+    }
   }
 
 }

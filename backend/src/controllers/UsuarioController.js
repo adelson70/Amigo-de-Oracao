@@ -131,6 +131,26 @@ const UsuarioController = {
     } catch (error) {
       res.status(500).json({ error: 'Failed to reset password' });
     }
+  },
+
+  verificarTokenEsqueciMinhaSenha: async (req, res) => {
+    try {
+      const { token } = req.params;
+
+      if (!token) {
+        return res.status(400).json({ error: 'Token is required' });
+      }
+
+      const isValid = await UsuarioService.verificarTokenEsqueciMinhaSenha(token);
+
+      if (!isValid) {
+        return res.status(400).json({ error: 'Invalid or expired token' });
+      }
+
+      res.status(200).json({ message: 'Token_is_valid' });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to verify token' });
+    }
   }
   
 };
