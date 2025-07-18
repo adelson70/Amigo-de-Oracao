@@ -1,12 +1,13 @@
-import React from "react";
+import { use, useEffect, useState } from "react";
 import ButtonComponent from "../ButtonComponent";
 import { useSocket } from "../../context/SocketContext";
-import { listarParticipantes } from "../../services/sala";
+import { getQrCodeSala, listarParticipantes } from "../../services/sala";
 import { toast } from "react-toastify";
 import './styles.css';
 
 
 const SalaOracaoComponent = ({ salaData, onClose, onSortear }) => {
+    const [qrCodeUrl, setQrCodeUrl] = useState("");
     const Socket = useSocket();
     const participantsId = `sala-oracao-participantes-${salaData.token}`;
     const buscarParticipantes = async () => {
@@ -66,6 +67,23 @@ const SalaOracaoComponent = ({ salaData, onClose, onSortear }) => {
         }
     })
 
+    useEffect(() => {
+        const fectQrCode = async () => {
+            try {
+                const url = await getQrCodeSala(salaData.token);
+                if (url) {
+                    setQrCodeUrl(url);
+                } else {
+                    toast.error("Erro ao obter QR Code da sala.");
+                }
+            } catch (error) {
+                console.error("Erro ao buscar QR Code:", error);
+                toast.error("Erro ao buscar QR Code. Tente novamente mais tarde.");
+            }
+        }
+        fectQrCode();
+    }, [salaData.token]);
+
     return (
         <div className="modal-overlay">
             <div className="modal-content sala-oracao-modal">
@@ -79,11 +97,13 @@ const SalaOracaoComponent = ({ salaData, onClose, onSortear }) => {
 
                 <h1>Sala de Oração "{salaData.nome}"</h1>
 
-                <img
-                    src={salaData.qrCodeUrl}
+                {qrCodeUrl && (
+                  <img
+                    src={qrCodeUrl}
                     alt="Sala de Oração"
                     className="sala-oracao-image"
-                />
+                  />
+                )}
 
                 <h2>Participantes</h2>
 

@@ -1,8 +1,9 @@
-const { BucketService } = require('../services/BucketService');
 const SalaService = require('../services/SalaService');
 const generateQRCode = require('../utils/qrCode');
 const generateTokenSala = require('../utils/salaToken');
 const { generateTokenParticipante, setTokenParticipanteCookie } = require('../utils/token');
+const { getQrCodeImage } = require('../utils/qrCode');
+const { get } = require('../routes');
 require('dotenv').config();
 
 const SalaController = {
@@ -84,12 +85,13 @@ const SalaController = {
     getQRCode: async (req, res) => {
         try {
             const { token } = req.params;
-            const qrCodeUrl = await BucketService.get(token);
+            const qrCodeImage = await getQrCodeImage(token);
 
-            if (!qrCodeUrl) {
+            if (!qrCodeImage) {
                 return res.status(404).json({ error: 'QR Code not found' });
             }
-            return res.status(200).json({ qrCodeUrl: qrCodeUrl.url });
+            res.set('Content-Type', 'image/png');
+            return res.status(200).send(qrCodeImage);
         } catch (error) {
             console.error('Error fetching QR Code:', error);
             return res.status(500).json({ error: 'Failed to fetch QR Code' });

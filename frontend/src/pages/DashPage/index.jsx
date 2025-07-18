@@ -168,14 +168,14 @@ const DashPage = () => {
   };
 
   const handleSalaOracaoData = async (nome, token) => {
-    const { qrCodeUrl } = await getQrCodeSala(token);
-    
-    if (!qrCodeUrl) {
-      toast.error("Erro ao obter QR Code da sala.");
-      return;
-    }
+    // const qrCodeUrl = await getQrCodeSala(token);
 
-    setSalaOracao({ nome, qrCodeUrl, token });
+    // if (!qrCodeUrl) {
+    //   toast.error("Erro ao obter QR Code da sala.");
+    //   return;
+    // }
+
+    setSalaOracao({ nome, token });
     handleOpenSalaOracao();
     Socket.emit("entrar_sala", { token, nome: "ADMIN" });
 

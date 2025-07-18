@@ -2,8 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const qrcode = require('qrcode');
 require('dotenv').config();
-const { QrCodes } = require('../models');
-const { raw } = require('express');
+const { QrCodes, Sala } = require('../models');
 
 const generateQRCode = async (data, token) => {
   try {
@@ -26,4 +25,28 @@ const generateQRCode = async (data, token) => {
   }
 };
 
-module.exports = generateQRCode;
+const getQrCodeImage = async (token) => {
+  try {
+    const { qr_code: qr_code_id } = await Sala.findOne({ where: { token }, attributes: ['qr_code'], raw: true });
+
+    if (!qr_code_id) {
+      throw new Error('QR Code not found for this token');
+    }
+
+    const {dados: qrCode} = await QrCodes.findByPk(qr_code_id, { raw: true, attributes: ['dados'] });
+
+    if (!qrCode) {
+      throw new Error('QR Code not found');
+    }
+
+    return qrCode;
+  } catch (error) {
+    console.error('Error fetching QR Code image:', error);
+    throw error;
+  }
+}
+
+module.exports = {
+  generateQRCode,
+  getQrCodeImage,
+};

@@ -32,8 +32,12 @@ export const createSala = async (sala) => {
 
 export const getQrCodeSala = async (token) => {
   try {
-    const response = await api.get(`/sala/qr-code/${token}`);
-    return response.data
+    const response = await api.get(`/sala/qr-code/${token}`, {
+      responseType: 'blob'
+    });
+    const blob = response.data;
+    const url = URL.createObjectURL(blob);
+    return url;
   } catch (error) {
     console.error("Error fetching QR code for room:", error);
     throw error;
