@@ -13,13 +13,14 @@ const SalaController = {
             const token = generateTokenSala();
             const qrCodeData = `${process.env.FRONTEND_URL}/room/lobby/${token}`;
 
-            await generateQRCode(qrCodeData, token);
+            const { message, qrcodeData } = await generateQRCode(qrCodeData, token);
 
             const room = await SalaService.create({ 
                 user_id: id,
                 token,
                 nome,
                 limite,
+                qr_code: qrcodeData.id,
             });
 
             return res.status(201).json(room);

@@ -17,10 +17,10 @@ const server = http.createServer(app);
 initSocket(server);
 
 // Inicializar o Redis
-initRedis()
+// initRedis()
 
 // Verificar o status do bucket ao iniciar o servidor
-BucketService.status()
+// BucketService.status()
 
 // Iniciar o servidor
 server.listen(PORT, () => {

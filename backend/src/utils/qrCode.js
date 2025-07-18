@@ -2,19 +2,24 @@ const fs = require('fs');
 const path = require('path');
 const qrcode = require('qrcode');
 require('dotenv').config();
-
-const { BucketService } = require('../services/BucketService');
+const { QrCodes } = require('../models');
+const { raw } = require('express');
 
 const generateQRCode = async (data, token) => {
   try {
     const qrCodePath = path.join(__dirname, `../temp/${token}.png`);
     await qrcode.toFile(qrCodePath, data, { errorCorrectionLevel: 'H', width: 700, height: 700 });
+    const filename = `${token}.png`;
+    const buffer = fs.readFileSync(qrCodePath);
 
-    const status = await BucketService.post(qrCodePath, `${token}.png`);
+    const qrcodeData = await QrCodes.create({
+      nome: filename,
+      dados: buffer,
+    },
+    { raw: true }
+  );
 
-    fs.unlinkSync(qrCodePath);
-
-    return status === 204 || status === 201 ? { message: 'QR Code Gerado e Enviado ao Bucket', token } : null; 
+    return { message: 'QR Code Gerado e Salvo no Banco de Dados', qrcodeData };
   } catch (error) {
     console.error('Error generating QR code:', error);
     throw error;

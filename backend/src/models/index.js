@@ -6,14 +6,15 @@ const Sala = require('./Sala');
 const Sorteio = require('./Sorteio');
 const Participante = require('./Participante');
 const RecuperacaoSenha = require('./RecuperacaoSenha');
-
+const QrCodes = require('./Qr_Codes')
 // Objeto que contém todos os modelos
 const models = {
     Usuario,
     Sala,
     Sorteio,
     Participante,
-    RecuperacaoSenha
+    RecuperacaoSenha,
+    QrCodes
 };
 
 // Aplicar associações se existirem

@@ -21,6 +21,10 @@ const Sala = database.define('Sala', {
     status: {
         type: DataTypes.STRING,
         defaultValue: 'aberta'
+    },
+    qr_code: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
     }
 }, {
     tableName: 'sala',
