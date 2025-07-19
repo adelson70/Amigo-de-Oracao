@@ -1,4 +1,4 @@
-const generateQRCode = require('../utils/qrCode');
+const { generateQRCode } = require('../utils/qrCode');
 require('dotenv').config();
 
 const QrCodeController = {

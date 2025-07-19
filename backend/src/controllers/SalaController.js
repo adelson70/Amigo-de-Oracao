@@ -1,5 +1,5 @@
 const SalaService = require('../services/SalaService');
-const generateQRCode = require('../utils/qrCode');
+const { generateQRCode } = require('../utils/qrCode');
 const generateTokenSala = require('../utils/salaToken');
 const { generateTokenParticipante, setTokenParticipanteCookie } = require('../utils/token');
 const { getQrCodeImage } = require('../utils/qrCode');
