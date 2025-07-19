@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import api from "./api";
 
 export async function Login(email, senha) {
@@ -54,4 +55,14 @@ export async function RedefinirSenha(token, senha) {
         senha
     });
     return response.data;
+}
+
+export async function Registrar(params) {
+    try {
+        const response = await api.post('/usuario/register', params);
+        return response.data;
+    } catch (error) {
+        toast.error(error.response?.data?.error || 'Erro ao registrar usuário');
+        throw error;
+    }
 }
