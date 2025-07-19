@@ -91,3 +91,13 @@ body::-webkit-scrollbar, html::-webkit-scrollbar {
 .salas-table-container::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera */
 }
+
+#swal-input-senha {
+    width: 25rem;
+    margin: 0 auto;
+}
+
+#swal-input-email {
+    width: 25rem;
+    margin: 0 auto;
+}

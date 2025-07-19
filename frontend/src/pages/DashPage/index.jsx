@@ -168,13 +168,6 @@ const DashPage = () => {
   };
 
   const handleSalaOracaoData = async (nome, token) => {
-    // const qrCodeUrl = await getQrCodeSala(token);
-
-    // if (!qrCodeUrl) {
-    //   toast.error("Erro ao obter QR Code da sala.");
-    //   return;
-    // }
-
     setSalaOracao({ nome, token });
     handleOpenSalaOracao();
     Socket.emit("entrar_sala", { token, nome: "ADMIN" });
@@ -213,8 +206,8 @@ const DashPage = () => {
         Swal.fire({
           title: 'Perfil',
           html: `
-            <label for="swal-input-nome" style="display:block;text-align:center;margin-bottom:2px;">Nome</label>
-            <input id="swal-input-nome" class="swal2-input" placeholder="Nome" type="text" style="margin-bottom:10px; text-align:center;" value="${usuario.nome}" maxlength="30" disabled>
+            <label for="swal-input-email" style="display:block;text-align:center;margin-bottom:2px;">Email</label>
+            <input id="swal-input-email" class="swal2-input" placeholder="Email" type="email" style="margin-bottom:10px; text-align:center;" value="${usuario.email}" disabled>
             <label for="swal-input-senha" style="display:block;text-align:center;margin-bottom:2px; padding-top:22px">Senha</label>
             <input id="swal-input-senha" class="swal2-input" placeholder="Senha" type="password" style="text-align:center;">
           `,
