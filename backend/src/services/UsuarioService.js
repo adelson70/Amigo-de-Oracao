@@ -12,6 +12,27 @@ const messages = {
 }
 
 const UsuarioService = {
+
+  async register(nome, email, senha) {
+    try {
+      const usuarioExistente = await Usuario.findOne({where: { email}})
+
+      if (usuarioExistente) {
+        return { message: 'Usuário já cadastrado', status: 400 };
+      }
+      
+      const hashedPassword = await bcrypt.hash(senha, 10);
+      const usuario = await Usuario.create({ nome, email, senha: hashedPassword });
+
+      return { id: usuario.id, nome: usuario.nome, email: usuario.email };
+      
+    } 
+    catch (error) {
+      console.error('Error during registration:', error);
+      throw error;
+    }
+  },
+
   async login(emailLogin, senhaLogin) {
     try {
         // Verifica se o usuário existe

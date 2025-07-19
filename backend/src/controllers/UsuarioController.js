@@ -47,8 +47,22 @@ const UsuarioController = {
 
   register: async (req, res) => {
     try {
-      // Implement registration logic here
-      res.status(201).json({ message: 'Registration successful' });
+      const { nome, email, senha } = req.body;
+
+      if (!nome || !email || !senha) {
+        return res.status(400).json({ error: 'Preencha todos os campos' });
+      }
+
+      const usuario = await UsuarioService.register(nome, email, senha);
+
+      if (usuario.status === 400) {
+        return res.status(400).json({ error: usuario.message });
+      }
+
+      if (!usuario) {
+        return res.status(500).json({ error: 'Erro interno ao criar usuário' });
+      }
+      res.status(201).json({ usuario });
     } catch (error) {
       res.status(500).json({ error: 'Registration failed' });
     }
