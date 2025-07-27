@@ -84,12 +84,22 @@ body::-webkit-scrollbar, html::-webkit-scrollbar {
 /* Permitir rolagem apenas dentro do container da tabela */
 .salas-table-container {
     overflow-y: auto;
-    max-height: 80vh;
-    scrollbar-width: none; /* Firefox */
+    max-height: 75vh;
+    height: calc(75vh - 5px);
 }
 
+/* Scrollbar apenas no body do modal, encostada na lateral */
 .salas-table-container::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+    width: 8px;
+}
+
+.salas-table-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.salas-table-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 
 #swal-input-senha {

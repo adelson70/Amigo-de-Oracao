@@ -68,3 +68,14 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  padding: 1rem;
+  background-color: #FFF8DC;
+  color: #003366;
+  font-size: 0.9rem;
+}

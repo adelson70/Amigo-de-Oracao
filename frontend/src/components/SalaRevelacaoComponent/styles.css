@@ -23,10 +23,6 @@
     border-radius: 12px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.2);
     padding: 2rem 2.5rem;
-    min-width: 320px;
-    max-width: 90vw;
-    max-height: 60vh;
-    overflow-y: auto;
     text-align: center;
     animation: fadeInModal 0.3s;
 }
@@ -79,7 +75,46 @@
 
 .modal-sala-revelacao-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.modal-sala-revelacao-header h2 {
+    flex: 1;
+    text-align: center;
+    margin: 0;
+    padding-top: 10px;
+}
+
+.modal-sala-revelacao-close-modal-btn {
+    position: absolute;
+    left: 95%;
+    top: 1%;
+    transform: translateY(-50%);
+    margin: 0;
+    z-index: 1;
+}
+
+.modal-sala-revelacao-body {
+    overflow-y: auto;
+    max-height: 50vh;
+    height: calc(50vh - 280px);
+    margin-right: -2.5rem;
+    padding-right: 2.5rem;
+}
+
+/* Scrollbar apenas no body do modal, encostada na lateral */
+.modal-sala-revelacao-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-sala-revelacao-body::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.modal-sala-revelacao-body::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }

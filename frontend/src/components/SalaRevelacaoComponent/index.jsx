@@ -14,6 +14,7 @@ const SalaRevelacaoComponent = ({ salaData, onClose }) => {
                         &times;
                     </button>
                 </div>
+                <div className='modal-sala-revelacao-body'>
                 <ul>
                     {salaData.map((par, idx) => (
                         <li key={idx}>
@@ -21,6 +22,7 @@ const SalaRevelacaoComponent = ({ salaData, onClose }) => {
                         </li>
                     ))}
                 </ul>
+                </div>
             </div>
         </div>
     );
