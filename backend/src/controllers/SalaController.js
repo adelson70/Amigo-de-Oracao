@@ -1,8 +1,7 @@
 const SalaService = require('../services/SalaService');
-const { generateQRCode } = require('../utils/qrCode');
+const { generateQRCode, getQrCodeImage, deleteQRCodeTempFile } = require('../utils/qrCode');
 const generateTokenSala = require('../utils/salaToken');
 const { generateTokenParticipante, setTokenParticipanteCookie } = require('../utils/token');
-const { getQrCodeImage } = require('../utils/qrCode');
 const { get } = require('../routes');
 require('dotenv').config();
 
@@ -23,6 +22,8 @@ const SalaController = {
                 limite,
                 qr_code: qrcodeData.id,
             });
+
+            await deleteQRCodeTempFile(token);
 
             return res.status(201).json(room);
         } catch (error) {

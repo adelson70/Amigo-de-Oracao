@@ -46,7 +46,15 @@ const getQrCodeImage = async (token) => {
   }
 }
 
+const deleteQRCodeTempFile = (token) => {
+  const qrCodePath = path.join(__dirname, `../temp/${token}.png`);
+  if (fs.existsSync(qrCodePath)) {
+    fs.unlinkSync(qrCodePath);
+  }
+};
+
 module.exports = {
   generateQRCode,
   getQrCodeImage,
+  deleteQRCodeTempFile
 };
