@@ -2,13 +2,16 @@ require('dotenv').config();
 const { Sequelize } = require('sequelize');
 
 const database = new Sequelize(
-    process.env.DB_NAME || 'nome_do_banco',
-    process.env.DB_USER || 'dev',
-    process.env.DB_PASSWORD || 'dev123',
+    process.env.DATABASE_URL || 'nome_do_banco',
     {
-        host: process.env.DB_HOST || '192.168.124.194',
-        port: process.env.DB_PORT || 5433,
         dialect: 'postgres',
+        protocol: 'postgres',
+        dialectOptions: {
+            ssl: {
+                require: true,
+                rejectUnauthorized: false,
+            },
+        },
         logging: false,
         define: {
             timestamps: true,
@@ -30,6 +33,14 @@ async function connect() {
         console.error('BANCO DE DADOS: ERRO AO CONECTAR', error);
     }
 }
+async function close() {
+    try {
+        await database.close();
+    } catch (error) {
+        console.error('BANCO DE DADOS: ERRO AO FECHAR CONEXÃO', error);
+    }
+}
+
 async function close() {
     try {
         await database.close();
